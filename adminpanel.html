@@ -434,17 +434,14 @@
             </div>
             <form id="memberForm">
                 <input type="hidden" id="editId" />
-                
                 <div class="form-group">
                     <label>Full Name <span style="color:var(--primary);">*</span></label>
                     <input type="text" id="formName" placeholder="e.g. Jessica Smith" required />
                 </div>
-                
                 <div class="form-group">
                     <label>Email <span style="color:var(--primary);">*</span></label>
                     <input type="email" id="formEmail" placeholder="you@example.com" required />
                 </div>
-                
                 <div class="form-row">
                     <div class="form-group">
                         <label>Gender <span style="color:var(--primary);">*</span></label>
@@ -465,7 +462,6 @@
                         </select>
                     </div>
                 </div>
-                
                 <div class="form-row">
                     <div class="form-group">
                         <label>Date of Birth</label>
@@ -476,12 +472,10 @@
                         <input type="text" id="formLocation" placeholder="Toronto, ON" />
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <label>Bio</label>
                     <textarea id="formBio" placeholder="About this member..." rows="3"></textarea>
                 </div>
-                
                 <div class="form-group">
                     <label>Interests (comma separated)</label>
                     <input type="text" id="formInterests" placeholder="Travel, Music, Hiking" />
@@ -508,7 +502,6 @@
                         <option value="rejected">Rejected</option>
                     </select>
                 </div>
-                
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
                     <button type="submit" class="btn btn-primary" id="formSubmitBtn"><i class="fas fa-save"></i> Save Member</button>
@@ -774,6 +767,12 @@
                 photoInput.value = '';
             }
 
+            function removePhoto() {
+                if (confirm('Remove this photo?')) {
+                    resetPhotoUI();
+                }
+            }
+
             // Open add modal
             window.openAddModal = function() {
                 editId.value = '';
@@ -835,7 +834,8 @@
                     dob: document.getElementById('formDob').value || null,
                     location: document.getElementById('formLocation').value.trim() || null,
                     bio: document.getElementById('formBio').value.trim() || null,
-                    interests: document.getElementById('formInterests').value.trim() ? document.getElementById('formInterests').value.trim().split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s; }) : [],
+                    interests: document.getElementById('formInterests').value.trim() ? document.getElementById('formInterests')
+                        .value.trim().split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s; }) : [],
                     status: document.getElementById('formStatus').value
                 };
 
