@@ -19,13 +19,13 @@
             --text-lighter: #9A94A3;
             --white: #FFFFFF;
             --off-white: #FAF9FB;
-            --shadow-sm: 0 4px 20px rgba(26, 20, 35, 0.06);
-            --shadow-md: 0 12px 40px rgba(26, 20, 35, 0.08);
-            --shadow-lg: 0 24px 60px rgba(194, 24, 91, 0.12);
-            --shadow-xl: 0 32px 80px rgba(194, 24, 91, 0.18);
+            --shadow-sm: 0 4px 20px rgba(26,20,35,0.06);
+            --shadow-md: 0 12px 40px rgba(26,20,35,0.08);
+            --shadow-lg: 0 24px 60px rgba(194,24,91,0.12);
+            --shadow-xl: 0 32px 80px rgba(194,24,91,0.18);
             --radius: 20px;
             --radius-sm: 12px;
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         html { scroll-behavior: smooth; }
@@ -127,24 +127,19 @@
         }
         .page-header .header-actions .match-count i { margin-right:6px; }
 
-        .source-filter {
-            display:flex; gap:8px; align-items:center; background:var(--white);
-            padding:4px; border-radius:50px; border:1px solid rgba(0,0,0,0.06);
-            box-shadow:var(--shadow-sm); flex-wrap:wrap;
+        .filter-container {
+            display:flex; gap:12px; align-items:center; flex-wrap:wrap;
         }
-        .source-filter .filter-btn {
-            padding:8px 20px; border:none; border-radius:50px; background:transparent;
-            font-family:'Inter',sans-serif; font-size:13px; font-weight:500; color:var(--text-light);
-            cursor:pointer; transition:var(--transition);
+        .filter-container select {
+            padding:8px 16px; border-radius:50px; border:1px solid rgba(0,0,0,0.06);
+            background:var(--white); font-family:'Inter',sans-serif; font-size:13px;
+            font-weight:500; color:var(--text); outline:none; cursor:pointer;
+            transition:var(--transition);
         }
-        .source-filter .filter-btn:hover { color:var(--primary); background:var(--primary-light); }
-        .source-filter .filter-btn.active {
-            background:var(--primary-gradient); color:var(--white); box-shadow:0 4px 16px rgba(194,24,91,0.25);
-        }
-        .source-filter .filter-btn.active:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(194,24,91,0.35); }
+        .filter-container select:focus { border-color:var(--primary); box-shadow:0 0 0 4px rgba(194,24,91,0.06); }
 
         .discover-section { padding:40px 0 80px; }
-        .matches-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:24px; }
+        .matches-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; }
         .match-card {
             background:var(--white); border-radius:var(--radius); overflow:hidden;
             box-shadow:var(--shadow-sm); transition:var(--transition);
@@ -152,45 +147,66 @@
         }
         .match-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); border-color:var(--primary-light); }
         .match-card .card-image {
-            position:relative; height:200px; background:linear-gradient(135deg,var(--primary-light),var(--secondary-light));
+            position:relative; height:240px; background:linear-gradient(135deg,var(--primary-light),var(--secondary-light));
             display:flex; align-items:center; justify-content:center; overflow:hidden;
         }
+        .match-card .card-image .member-photo {
+            width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;
+        }
         .match-card .card-image .avatar-big {
-            width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-            font-size:28px; font-weight:700; color:var(--white); border:4px solid var(--white);
-            box-shadow:0 4px 20px rgba(0,0,0,0.1);
+            width:90px; height:90px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+            font-size:32px; font-weight:700; color:var(--white); border:4px solid var(--white);
+            box-shadow:0 4px 20px rgba(0,0,0,0.1); z-index:2; position:relative;
+        }
+        .match-card .card-image .photo-overlay {
+            position:absolute; bottom:0; left:0; right:0; padding:8px 14px;
+            background:linear-gradient(transparent, rgba(0,0,0,0.3));
+            display:flex; justify-content:flex-end; z-index:3;
+        }
+        .match-card .card-image .photo-overlay .upload-btn {
+            background:rgba(255,255,255,0.9); border:none; border-radius:50px;
+            padding:4px 14px; font-size:11px; font-weight:600; color:var(--primary);
+            cursor:pointer; transition:var(--transition);
+            display:flex; align-items:center; gap:4px;
+        }
+        .match-card .card-image .photo-overlay .upload-btn:hover {
+            background:var(--white); transform:scale(1.05);
         }
         .match-card .card-image .badge-match {
-            position:absolute; top:14px; right:14px;
+            position:absolute; top:14px; right:14px; z-index:5;
             background:var(--secondary-gradient); color:var(--white); padding:4px 14px;
             border-radius:50px; font-size:12px; font-weight:700; box-shadow:0 4px 16px rgba(212,165,74,0.3);
         }
         .match-card .card-image .badge-verified {
-            position:absolute; bottom:14px; left:14px; background:rgba(255,255,255,0.92);
-            backdrop-filter:blur(10px); padding:4px 12px; border-radius:50px; font-size:11px;
-            font-weight:600; color:#4CAF50; display:flex; align-items:center; gap:4px;
-            box-shadow:var(--shadow-sm);
+            position:absolute; bottom:14px; left:14px; z-index:5;
+            background:rgba(255,255,255,0.92); backdrop-filter:blur(10px); padding:4px 12px;
+            border-radius:50px; font-size:11px; font-weight:600; color:#4CAF50;
+            display:flex; align-items:center; gap:4px; box-shadow:var(--shadow-sm);
         }
         .match-card .card-image .badge-verified i { font-size:12px; }
         .match-card .card-image .badge-online {
-            position:absolute; bottom:14px; right:14px; width:14px; height:14px;
-            border-radius:50%; background:#4CAF50; border:2px solid var(--white);
-            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+            position:absolute; bottom:14px; right:14px; z-index:5;
+            width:14px; height:14px; border-radius:50%; background:#4CAF50;
+            border:2px solid var(--white); box-shadow:0 2px 8px rgba(0,0,0,0.1);
         }
-        .match-card .card-image .source-badge {
-            position:absolute; bottom:14px; right:45px; background:rgba(0,0,0,0.7);
-            color:var(--white); padding:2px 12px; border-radius:50px; font-size:10px;
-            font-weight:500; backdrop-filter:blur(4px);
-        }
-        .match-card .card-body { padding:18px 20px 16px; }
+        .match-card .card-body { padding:20px 20px 16px; }
         .match-card .card-body .name-age { display:flex; justify-content:space-between; align-items:center; margin-bottom:2px; }
-        .match-card .card-body .name-age h4 { font-size:18px; font-weight:700; color:var(--dark); }
-        .match-card .card-body .name-age .age { font-size:15px; color:var(--text-light); font-weight:500; }
-        .match-card .card-body .location { font-size:13px; color:var(--text-lighter); display:flex; align-items:center; gap:4px; margin-bottom:10px; }
+        .match-card .card-body .name-age h4 { font-size:20px; font-weight:700; color:var(--dark); }
+        .match-card .card-body .name-age .age { font-size:16px; color:var(--text-light); font-weight:500; }
+        .match-card .card-body .location { font-size:13px; color:var(--text-lighter); display:flex; align-items:center; gap:4px; margin-bottom:6px; }
         .match-card .card-body .location i { font-size:12px; }
+        .match-card .card-body .bio {
+            font-size:14px; color:var(--text-light); line-height:1.6;
+            margin-bottom:12px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+        }
         .match-card .card-body .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
         .match-card .card-body .tags span { background:var(--off-white); padding:3px 12px; border-radius:50px; font-size:11px; font-weight:500; color:var(--text-light); }
         .match-card .card-body .tags span i { margin-right:4px; font-size:10px; color:var(--primary); }
+        .match-card .card-body .looking-for {
+            font-size:12px; color:var(--text-lighter); background:var(--primary-light);
+            padding:4px 12px; border-radius:50px; display:inline-block; margin-bottom:12px;
+        }
+        .match-card .card-body .looking-for i { margin-right:4px; color:var(--primary); }
         .match-card .card-body .actions-row {
             display:flex; align-items:center; justify-content:space-between;
             padding-top:12px; border-top:1px solid rgba(0,0,0,0.04); gap:8px; flex-wrap:wrap;
@@ -209,14 +225,7 @@
         .empty-state h3 { font-size:22px; font-weight:700; margin-bottom:8px; }
         .empty-state p { color:var(--text-light); max-width:400px; margin:0 auto 20px; }
 
-        .loading {
-            text-align:center; padding:60px 20px; color:var(--text-lighter);
-            grid-column:1/-1;
-        }
-        .loading i { font-size:48px; color:var(--primary-light); margin-bottom:16px; animation:spin 1s linear infinite; display:block; }
-        @keyframes spin { to { transform:rotate(360deg); } }
-
-        @media (max-width:1024px) { .matches-grid { grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); } }
+        @media (max-width:1024px) { .matches-grid { grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); } }
         @media (max-width:768px) {
             .nav-links { display:none; flex-direction:column; position:absolute; top:100%; left:0; width:100%; background:var(--white); padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.1); gap:14px; border-radius:0 0 var(--radius) var(--radius); }
             .nav-links.open { display:flex; }
@@ -224,13 +233,14 @@
             .page-header { padding:80px 0 28px; }
             .page-header h1 { font-size:26px; }
             .page-header .container { flex-direction:column; align-items:flex-start; gap:12px; }
-            .source-filter { width:100%; justify-content:center; }
-            .source-filter .filter-btn { padding:6px 14px; font-size:12px; flex:1; text-align:center; }
+            .filter-container { width:100%; }
+            .filter-container select { flex:1; }
             .matches-grid { grid-template-columns:1fr 1fr; gap:16px; }
-            .match-card .card-image { height:160px; }
+            .match-card .card-image { height:180px; }
             .match-card .card-image .avatar-big { width:60px; height:60px; font-size:20px; }
             .match-card .card-body { padding:14px 16px 12px; }
             .match-card .card-body .name-age h4 { font-size:16px; }
+            .match-card .card-body .bio { font-size:13px; -webkit-line-clamp:1; }
             .match-card .card-body .actions-row .primary-actions .btn-view,
             .match-card .card-body .actions-row .primary-actions .btn-message { font-size:11px; padding:5px 12px; }
             .match-card .card-body .actions-row .primary-actions .btn-message span { display:none; }
@@ -245,7 +255,7 @@
             .match-card .card-body .actions-row { flex-direction:column; align-items:stretch; gap:10px; }
             .match-card .card-body .actions-row .primary-actions { justify-content:center; }
             .match-card .card-body .actions-row .action-buttons { justify-content:center; }
-            .source-filter .filter-btn { font-size:11px; padding:5px 10px; }
+            .filter-container select { font-size:12px; padding:6px 12px; }
         }
 
         @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
@@ -292,11 +302,19 @@
                 <p>Browse through curated profiles tailored to your preferences.</p>
             </div>
             <div class="header-actions">
-                <span class="match-count" id="matchCount"><i class="fas fa-heart"></i> 0 members</span>
-                <div class="source-filter" id="sourceFilter">
-                    <button class="filter-btn active" data-source="all">All Members</button>
-                    <button class="filter-btn" data-source="app">📱 App Sign-ups</button>
-                    <button class="filter-btn" data-source="admin">👤 Admin Added</button>
+                <span class="match-count" id="matchCount"><i class="fas fa-heart"></i> 0 Members</span>
+                <div class="filter-container">
+                    <select id="genderFilter">
+                        <option value="all">All Genders</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <select id="statusFilter">
+                        <option value="active">Active Members</option>
+                        <option value="pending">Pending Members</option>
+                        <option value="all">All Members</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -330,7 +348,8 @@
 
             const grid = document.getElementById('matchesGrid');
             const matchCount = document.getElementById('matchCount');
-            const filterBtns = document.querySelectorAll('.filter-btn');
+            const genderFilter = document.getElementById('genderFilter');
+            const statusFilter = document.getElementById('statusFilter');
 
             function escapeHtml(text) {
                 if (!text) return '—';
@@ -339,14 +358,26 @@
                 return div.innerHTML;
             }
 
-            async function loadMembers(source) {
-                source = source || 'all';
-                try {
-                    grid.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i>Loading members...</div>';
+            function getMatchPercentage() {
+                return Math.floor(Math.random() * 38) + 62;
+            }
 
-                    var query = supabase.from('members').select('*').order('created_at', { ascending: false });
-                    if (source !== 'all') {
-                        query = query.eq('source', source);
+            // Load members
+            async function loadMembers() {
+                try {
+                    let query = supabase
+                        .from('members')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    var statusValue = statusFilter.value;
+                    if (statusValue !== 'all') {
+                        query = query.eq('status', statusValue);
+                    }
+
+                    var genderValue = genderFilter.value;
+                    if (genderValue !== 'all') {
+                        query = query.eq('gender', genderValue);
                     }
 
                     var result = await query;
@@ -357,14 +388,12 @@
 
                     if (!data || data.length === 0) {
                         grid.innerHTML =
-                            '<div class="empty-state"><i class="fas fa-users-slash"></i><h3>No members found</h3><p>' +
-                            (source === 'all' ? 'Be the first to join our community!' : 'No members from this source yet.') +
-                            '</p></div>';
-                        matchCount.innerHTML = '<i class="fas fa-heart"></i> 0 members';
+                            '<div class="empty-state"><i class="fas fa-heart"></i><h3>No members found</h3><p>Try adjusting your filters or check back later.</p></div>';
+                        matchCount.innerHTML = '<i class="fas fa-heart"></i> 0 Members';
                         return;
                     }
 
-                    matchCount.innerHTML = '<i class="fas fa-heart"></i> ' + data.length + ' members';
+                    matchCount.innerHTML = '<i class="fas fa-heart"></i> ' + data.length + ' Members';
 
                     var colors = ['#C2185B', '#D4A54A', '#4CAF50', '#7B1FA2', '#00695C', '#E65100', '#1565C0', '#AD1457'];
                     var html = '';
@@ -380,28 +409,44 @@
                             var ageNum = new Date().getFullYear() - birth.getFullYear();
                             var mth = new Date().getMonth() - birth.getMonth();
                             if (mth < 0 || (mth === 0 && new Date().getDate() < birth.getDate())) ageNum--;
-                            if (ageNum > 0) age = ageNum;
+                            if (ageNum > 0 && ageNum < 100) age = ageNum;
                         }
 
                         var interests = Array.isArray(member.interests) ? member.interests : [];
-                        var statusClass = member.status === 'active' ? 'online' : '';
-                        var sourceLabel = member.source === 'admin' ? 'Admin' : 'App';
-                        var sourceIcon = member.source === 'admin' ? '👤' : '📱';
-                        var matchPercent = Math.floor(Math.random() * 38) + 60;
+                        var matchPercent = getMatchPercentage();
+                        var statusBadge = member.status === 'active' ? '🟢 Active' : '🟡 Pending';
+                        var lookingIcon = member.looking_for === 'Men' ? '♂️' : member.looking_for === 'Women' ? '♀️' :
+                            '🌍';
+                        var photoHtml = '';
+
+                        if (member.photo_url) {
+                            photoHtml =
+                                '<img src="' + member.photo_url + '" class="member-photo" alt="' + escapeHtml(member
+                                .name) + '" />';
+                            photoHtml +=
+                                '<div class="avatar-big" style="background:' + color + ';border:4px solid rgba(255,255,255,0.9);">' +
+                                initials + '</div>';
+                        } else {
+                            photoHtml = '<div class="avatar-big" style="background:' + color + ';">' + initials +
+                                '</div>';
+                        }
 
                         html += '<div class="match-card">';
                         html += '<div class="card-image">';
-                        html += '<div class="avatar-big" style="background:' + color + ';">' + initials + '</div>';
+                        html += photoHtml;
                         html += '<span class="badge-match">' + matchPercent + '% Match</span>';
                         html += '<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>';
-                        if (statusClass) html += '<span class="badge-online"></span>';
-                        html += '<span class="source-badge">' + sourceIcon + ' ' + sourceLabel + '</span>';
+                        html += '<span class="badge-online"></span>';
                         html += '</div>';
                         html += '<div class="card-body">';
                         html += '<div class="name-age"><h4>' + escapeHtml(member.name) + '</h4><span class="age">' + age +
                             '</span></div>';
                         html += '<div class="location"><i class="fas fa-map-marker-alt"></i> ' + escapeHtml(member
                             .location || 'Not set') + '</div>';
+                        html += '<div class="looking-for"><i class="fas fa-search"></i> Looking for: ' + escapeHtml(
+                            member.looking_for || 'Not specified') + ' ' + lookingIcon + ' • <span style="color:' + (member
+                            .status === 'active' ? '#4CAF50' : '#E65100') + ';">' + statusBadge + '</span></div>';
+                        html += '<div class="bio">' + escapeHtml(member.bio || 'No bio yet.') + '</div>';
                         html += '<div class="tags">';
                         if (interests.length > 0) {
                             for (var i = 0; i < Math.min(interests.length, 3); i++) {
@@ -411,7 +456,7 @@
                                 html += '<span>+' + (interests.length - 3) + ' more</span>';
                             }
                         } else {
-                            html += '<span><i class="fas fa-user"></i> New member</span>';
+                            html += '<span><i class="fas fa-user"></i> No interests listed</span>';
                         }
                         html += '</div>';
                         html += '<div class="actions-row">';
@@ -420,8 +465,9 @@
                         html += '<div class="primary-actions">';
                         html +=
                             '<button class="btn-view" onclick="alert(\'👤 Viewing ' + escapeHtml(member.name) + '\\\'s profile...\\n📧 Email: ' +
-                            escapeHtml(member.email) + '\\n📊 Status: ' + (member.status || 'pending') + '\\n📱 Source: ' +
-                            sourceLabel + '\')"><i class="fas fa-user"></i> View Profile</button>';
+                            escapeHtml(member.email) + '\\n📊 Status: ' + (member.status || 'pending') +
+                            '\\n💬 Bio: ' + escapeHtml(member.bio || 'No bio') + '\\n📍 Location: ' + escapeHtml(member
+                                .location || 'Not set') + '\')"><i class="fas fa-user"></i> View Profile</button>';
                         html +=
                             '<button class="btn-message" onclick="alert(\'💬 Start a conversation with ' + escapeHtml(member
                                 .name) + '!\\n📧 Email: ' + escapeHtml(member.email) + '\')"><i class="fas fa-comment"></i> <span>Message</span></button>';
@@ -437,17 +483,12 @@
                 }
             }
 
-            // Filter buttons
-            filterBtns.forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    filterBtns.forEach(function(b) { b.classList.remove('active'); });
-                    this.classList.add('active');
-                    loadMembers(this.dataset.source);
-                });
-            });
+            // Event listeners for filters
+            genderFilter.addEventListener('change', loadMembers);
+            statusFilter.addEventListener('change', loadMembers);
 
-            // Load all members on page load
-            loadMembers('all');
+            // Load members on page load
+            loadMembers();
         });
     </script>
 
