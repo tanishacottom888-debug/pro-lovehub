@@ -4,372 +4,405 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Login — ProLoveHub</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #C2185B;
+            --primary-dark: #8B0E3D;
+            --primary-light: #F8E8EE;
+            --primary-gradient: linear-gradient(135deg, #C2185B, #E85D8A);
+            --secondary: #D4A54A;
+            --secondary-light: #FDF6E8;
+            --dark: #1A1423;
+            --text: #2D2A2E;
+            --text-light: #6B6570;
+            --text-lighter: #9A94A3;
+            --white: #FFFFFF;
+            --off-white: #FAF9FB;
+            --shadow-sm: 0 4px 20px rgba(26,20,35,0.06);
+            --shadow-md: 0 12px 40px rgba(26,20,35,0.08);
+            --shadow-lg: 0 24px 60px rgba(194,24,91,0.12);
+            --shadow-xl: 0 32px 80px rgba(194,24,91,0.18);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
         }
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f5f0f2;
-            padding: 20px;
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:var(--off-white); min-height:100vh; display:flex; align-items:center; justify-content:center; -webkit-font-smoothing:antialiased; }
+        ::selection { background:var(--primary); color:var(--white); }
+
+        .auth-container { display:flex; min-height:100vh; width:100%; background:var(--white); }
+        .auth-left {
+            flex:1.2; background:linear-gradient(145deg,#1A1423 0%,#2D2840 50%,#3A2A4A 100%);
+            display:flex; flex-direction:column; justify-content:center; padding:60px 48px;
+            position:relative; overflow:hidden; color:var(--white);
         }
-        .login-wrapper {
-            display: flex;
-            max-width: 900px;
-            width: 100%;
-            min-height: 500px;
-            background: #fff;
-            border-radius: 32px;
-            box-shadow: 0 40px 80px rgba(26, 20, 35, 0.12);
-            overflow: hidden;
+        .auth-left::before {
+            content:'❤'; position:absolute; font-size:420px; opacity:0.04;
+            top:-60px; right:-60px; transform:rotate(12deg);
+            font-family:'Playfair Display',serif; pointer-events:none;
         }
-        .login-brand {
-            flex: 1;
-            padding: 48px 40px;
-            background: linear-gradient(145deg, #1A1423 0%, #2D2840 50%, #3A2A4A 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            color: #fff;
-            position: relative;
-            overflow: hidden;
+        .auth-left .floating-shape { position:absolute; border-radius:50%; background:rgba(255,255,255,0.02); pointer-events:none; }
+        .auth-left .floating-shape.shape-1 { width:300px; height:300px; top:20%; left:-80px; }
+        .auth-left .floating-shape.shape-2 { width:200px; height:200px; bottom:20%; right:-40px; background:rgba(255,255,255,0.03); }
+
+        .auth-left .brand-large { position:relative; z-index:2; margin-bottom:40px; }
+        .auth-left .brand-large .logo-icon { display:inline-flex; align-items:center; gap:16px; text-decoration:none; margin-bottom:24px; }
+        .auth-left .brand-large .logo-icon .icon-bg {
+            width:56px; height:56px; background:rgba(255,255,255,0.08);
+            backdrop-filter:blur(10px); border-radius:16px;
+            display:flex; align-items:center; justify-content:center; font-size:26px;
+            color:var(--secondary); border:1px solid rgba(255,255,255,0.06);
         }
-        .login-brand::before {
-            content: '❤';
-            position: absolute;
-            font-size: 250px;
-            opacity: 0.04;
-            top: -40px;
-            right: -40px;
-            font-family: 'Georgia', serif;
-            pointer-events: none;
+        .auth-left .brand-large .logo-icon .brand-text { font-family:'Playfair Display',serif; font-size:32px; font-weight:900; letter-spacing:-0.5px; }
+        .auth-left .brand-large .logo-icon .brand-text .pro { color:#FFB6C1; }
+        .auth-left .brand-large .logo-icon .brand-text .love { color:var(--white); }
+        .auth-left .brand-large .logo-icon .brand-text .hub { color:var(--secondary); }
+
+        .auth-left .hero-text { position:relative; z-index:2; max-width:420px; }
+        .auth-left .hero-text h1 { font-family:'Playfair Display',serif; font-size:38px; font-weight:800; line-height:1.1; margin-bottom:16px; }
+        .auth-left .hero-text h1 .gold { color:var(--secondary); }
+        .auth-left .hero-text p { font-size:16px; opacity:0.7; line-height:1.7; margin-bottom:32px; }
+
+        .auth-left .feature-list { display:flex; flex-direction:column; gap:14px; position:relative; z-index:2; }
+        .auth-left .feature-list .feature-item { display:flex; align-items:center; gap:14px; font-size:14px; opacity:0.8; }
+        .auth-left .feature-list .feature-item i {
+            width:28px; height:28px; background:rgba(255,255,255,0.06);
+            border-radius:50%; display:flex; align-items:center; justify-content:center;
+            font-size:13px; color:var(--secondary); flex-shrink:0;
         }
-        .login-brand .logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 2;
+
+        .auth-left .trust-badge-bottom {
+            position:relative; z-index:2; margin-top:48px;
+            display:flex; gap:32px; flex-wrap:wrap; padding-top:24px;
+            border-top:1px solid rgba(255,255,255,0.06);
         }
-        .login-brand .logo .icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: #D4A54A;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+        .auth-left .trust-badge-bottom span { display:flex; align-items:center; gap:8px; font-size:13px; opacity:0.6; }
+        .auth-left .trust-badge-bottom span i { color:var(--secondary); font-size:16px; }
+
+        .auth-right { flex:1; display:flex; align-items:center; justify-content:center; padding:40px 24px; background:var(--off-white); }
+        .auth-card {
+            background:var(--white); border-radius:var(--radius); padding:48px 40px;
+            box-shadow:var(--shadow-xl); width:100%; max-width:420px;
+            border:1px solid rgba(255,255,255,0.8); transition:var(--transition);
         }
-        .login-brand .logo .brand {
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: -0.5px;
+        .auth-card .card-header { text-align:center; margin-bottom:32px; }
+        .auth-card .card-header h2 { font-family:'Playfair Display',serif; font-size:28px; font-weight:800; color:var(--dark); }
+        .auth-card .card-header h2 .highlight { color:var(--primary); }
+        .auth-card .card-header p { color:var(--text-light); font-size:15px; margin-top:4px; }
+        .auth-card .admin-shield { display:flex; justify-content:center; margin-bottom:24px; }
+        .auth-card .admin-shield .shield-icon {
+            width:72px; height:72px; background:var(--primary-light); border-radius:50%;
+            display:flex; align-items:center; justify-content:center; font-size:32px;
+            color:var(--primary); border:4px solid var(--white); box-shadow:var(--shadow-sm);
         }
-        .login-brand .logo .brand .pro {
-            color: #FFB6C1;
-        }
-        .login-brand .logo .brand .love {
-            color: #fff;
-        }
-        .login-brand .logo .brand .hub {
-            color: #D4A54A;
-        }
-        .login-brand .tagline {
-            font-size: 14px;
-            opacity: 0.6;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-weight: 500;
-            margin-top: 4px;
-        }
-        .login-brand h1 {
-            font-size: 36px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 2;
-        }
-        .login-brand h1 .gold {
-            color: #D4A54A;
-        }
-        .login-brand p {
-            font-size: 16px;
-            opacity: 0.7;
-            line-height: 1.7;
-            max-width: 360px;
-            position: relative;
-            z-index: 2;
-        }
-        .login-form-panel {
-            flex: 1;
-            padding: 48px 44px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background: #fff;
-        }
-        .login-form-panel .admin-shield {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
-        .login-form-panel .admin-shield .shield-icon {
-            width: 72px;
-            height: 72px;
-            background: #F8E8EE;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: #C2185B;
-            border: 4px solid #fff;
-            box-shadow: 0 4px 20px rgba(194, 24, 91, 0.1);
-        }
-        .login-form-panel h2 {
-            font-size: 28px;
-            font-weight: 800;
-            text-align: center;
-            color: #1A1423;
-            margin-bottom: 4px;
-        }
-        .login-form-panel h2 .highlight {
-            color: #C2185B;
-        }
-        .login-form-panel .subtitle {
-            text-align: center;
-            color: #6B6570;
-            font-size: 15px;
-            margin-bottom: 28px;
-        }
-        .form-group {
-            margin-bottom: 18px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #2D2A2E;
-            margin-bottom: 6px;
-        }
-        .input-wrapper {
-            position: relative;
-        }
+
+        .form-group { margin-bottom:20px; }
+        .form-group label { display:block; font-size:14px; font-weight:600; color:var(--text); margin-bottom:6px; }
+        .form-group label .required { color:var(--primary); }
+        .input-wrapper { position:relative; }
         .input-wrapper i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9A94A3;
-            font-size: 16px;
+            position:absolute; left:16px; top:50%; transform:translateY(-50%);
+            color:var(--text-lighter); font-size:16px; transition:var(--transition);
         }
         .input-wrapper input {
-            width: 100%;
-            padding: 14px 16px 14px 48px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            background: #FAF9FB;
-            font-size: 15px;
-            outline: none;
-            transition: 0.3s;
+            width:100%; padding:14px 16px 14px 48px; border-radius:var(--radius-sm);
+            border:1px solid rgba(0,0,0,0.06); background:var(--off-white);
+            font-family:'Inter',sans-serif; font-size:15px; color:var(--text);
+            transition:var(--transition); outline:none;
         }
-        .input-wrapper input:focus {
-            border-color: #C2185B;
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(194, 24, 91, 0.06);
+        .input-wrapper input:focus { border-color:var(--primary); background:var(--white); box-shadow:0 0 0 4px rgba(194,24,91,0.06); }
+        .input-wrapper input:focus+i { color:var(--primary); }
+        .input-wrapper input::placeholder { color:var(--text-lighter); }
+        .input-wrapper .toggle-password {
+            position:absolute; right:14px; top:50%; transform:translateY(-50%);
+            background:none; border:none; color:var(--text-lighter);
+            cursor:pointer; font-size:16px; padding:4px; transition:var(--transition);
         }
+        .input-wrapper .toggle-password:hover { color:var(--text); }
+
+        .form-options { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; font-size:14px; }
+        .form-options .remember-me { display:flex; align-items:center; gap:8px; color:var(--text-light); cursor:pointer; }
+        .form-options .remember-me input[type="checkbox"] { width:18px; height:18px; accent-color:var(--primary); cursor:pointer; }
+
         .btn-primary {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #C2185B, #E85D8A);
-            color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 8px 30px rgba(194, 24, 91, 0.3);
-            margin-top: 8px;
+            display:inline-flex; align-items:center; justify-content:center; gap:10px;
+            padding:16px 32px; background:var(--primary-gradient); color:var(--white);
+            border:none; border-radius:50px; font-size:16px; font-weight:600;
+            font-family:'Inter',sans-serif; cursor:pointer; transition:var(--transition);
+            text-decoration:none; box-shadow:0 8px 30px rgba(194,24,91,0.3);
+            position:relative; overflow:hidden; width:100%;
         }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(194, 24, 91, 0.4);
+        .btn-primary::after {
+            content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+            background:linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition:0.6s;
         }
+        .btn-primary:hover::after { left:100%; }
+        .btn-primary:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(194,24,91,0.4); }
+        .btn-primary:disabled { opacity:0.6; cursor:not-allowed; }
+
         .error-message {
-            background: #FFEBEE;
-            color: #C62828;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            margin-bottom: 16px;
-            display: none;
-            align-items: center;
-            gap: 8px;
+            background:#FFEBEE; color:#C62828; padding:12px 16px;
+            border-radius:var(--radius-sm); font-size:14px; margin-bottom:16px;
+            display:none; align-items:center; gap:8px;
         }
-        .error-message.show {
-            display: flex;
+        .error-message.show { display:flex; }
+        .error-message i { font-size:16px; }
+
+        .security-badge { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:16px; font-size:12px; color:var(--text-lighter); }
+        .security-badge i { color:#4CAF50; font-size:14px; }
+
+        @media (max-width:1024px) {
+            .auth-left { flex:1; padding:48px 32px; }
+            .auth-left .hero-text h1 { font-size:32px; }
         }
-        .demo-text {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 13px;
-            color: #9A94A3;
+        @media (max-width:900px) {
+            .auth-container { flex-direction:column; min-height:100vh; }
+            .auth-left { padding:40px 32px; min-height:280px; justify-content:center; align-items:center; text-align:center; }
+            .auth-left .hero-text { max-width:100%; }
+            .auth-left .feature-list { align-items:center; }
+            .auth-left .trust-badge-bottom { justify-content:center; }
+            .auth-left .brand-large .logo-icon { justify-content:center; }
+            .auth-left::before { font-size:200px; }
+            .auth-right { padding:24px 16px; }
+            .auth-card { padding:32px 24px; max-width:100%; box-shadow:var(--shadow-md); }
         }
-        .security-badge {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 16px;
-            font-size: 12px;
-            color: #9A94A3;
+        @media (max-width:480px) {
+            .auth-left .hero-text h1 { font-size:26px; }
+            .auth-left { padding:24px 16px; min-height:200px; }
+            .auth-left .trust-badge-bottom { gap:16px; font-size:12px; }
+            .auth-card { padding:24px 16px; }
+            .auth-card .card-header h2 { font-size:24px; }
+            .form-options { flex-direction:column; gap:10px; align-items:flex-start; }
         }
-        .security-badge i {
-            color: #4CAF50;
-            font-size: 14px;
-        }
-        @media (max-width: 768px) {
-            .login-wrapper {
-                flex-direction: column;
-                max-width: 440px;
-                border-radius: 24px;
-            }
-            .login-brand {
-                padding: 32px 28px;
-                min-height: 200px;
-            }
-            .login-brand h1 {
-                font-size: 28px;
-            }
-            .login-form-panel {
-                padding: 32px 28px;
-            }
-        }
+
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+        .auth-form { animation:fadeInUp 0.4s ease forwards; }
     </style>
 </head>
 <body>
 
-    <div class="login-wrapper">
-        <div class="login-brand">
-            <div class="logo">
-                <div class="icon"><i class="fas fa-heart"></i></div>
-                <div>
-                    <span class="brand">
+    <div class="auth-container">
+        <!-- LEFT PANEL -->
+        <div class="auth-left">
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            <div class="brand-large">
+                <a href="#" class="logo-icon">
+                    <span class="icon-bg"><i class="fas fa-heart"></i></span>
+                    <span class="brand-text">
                         <span class="pro">Pro</span><span class="love">Love</span><span class="hub">Hub</span>
                     </span>
-                    <div class="tagline">Premium Matchmaking</div>
-                </div>
+                </a>
             </div>
-            <h1>Admin <span class="gold">Access</span></h1>
-            <p>Secure entry to manage members and oversee platform activity.</p>
+            <div class="hero-text">
+                <h1>Admin <span class="gold">Access</span></h1>
+                <p>Secure entry to manage members, oversee platform activity, and maintain community standards.</p>
+            </div>
+            <div class="feature-list">
+                <div class="feature-item"><i class="fas fa-users"></i> Manage members &amp; profiles</div>
+                <div class="feature-item"><i class="fas fa-shield-check"></i> Secure &amp; encrypted access</div>
+                <div class="feature-item"><i class="fas fa-gem"></i> Full platform oversight</div>
+            </div>
+            <div class="trust-badge-bottom">
+                <span><i class="fas fa-star"></i> 4.9/5 Rating</span>
+                <span><i class="fas fa-heart"></i> 12K+ Couples</span>
+                <span><i class="fas fa-lock"></i> 100% Encrypted</span>
+            </div>
         </div>
 
-        <div class="login-form-panel">
-            <div class="admin-shield">
-                <div class="shield-icon"><i class="fas fa-shield-alt"></i></div>
+        <!-- RIGHT PANEL -->
+        <div class="auth-right">
+            <div class="auth-card">
+                <div class="admin-shield">
+                    <div class="shield-icon"><i class="fas fa-shield-alt"></i></div>
+                </div>
+                <div class="card-header">
+                    <h2>Admin <span class="highlight">Login</span></h2>
+                    <p>Enter your credentials to access the dashboard.</p>
+                </div>
+
+                <form class="auth-form" id="loginForm">
+                    <div class="error-message" id="errorMessage">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span id="errorText">Invalid email or password. Please try again.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="loginEmail" placeholder="admin@prolovehub.com" required autofocus />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" placeholder="••••••••" required />
+                            <button type="button" class="toggle-password" onclick="togglePassword()">
+                                <i class="fas fa-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe" /> Remember me
+                        </label>
+                        <a href="#" class="forgot-link" style="color:var(--primary);text-decoration:none;font-weight:600;font-size:14px;" onclick="alert('📧 Password reset link will be sent to your email.')">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <i class="fas fa-arrow-right-to-bracket"></i> Log In
+                    </button>
+
+                    <div class="security-badge">
+                        <i class="fas fa-shield-halved"></i> Secure &amp; encrypted connection
+                    </div>
+
+                    <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--text-lighter);border-top:1px solid rgba(0,0,0,0.04);padding-top:16px;">
+                        <span>Demo: <strong>admin@prolovehub.com</strong></span>
+                    </div>
+                </form>
             </div>
-            <h2>Admin <span class="highlight">Login</span></h2>
-            <p class="subtitle">Enter your credentials to access the dashboard.</p>
-
-            <form id="adminLoginForm">
-                <div class="error-message" id="errorMessage">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span id="errorText">Invalid email or password.</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="loginEmail">Email Address</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" id="loginEmail" placeholder="admin@prolovehub.com" required autofocus />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="loginPassword" placeholder="••••••••" required />
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-primary"><i class="fas fa-arrow-right-to-bracket"></i> Log In</button>
-
-                <div class="security-badge">
-                    <i class="fas fa-shield-halved"></i> Secure &amp; encrypted connection
-                </div>
-                <div class="demo-text">Demo: <strong>admin@prolovehub.com</strong></div>
-            </form>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Supabase Config
             const SUPABASE_URL = 'https://precvldulohwudpfmzsn.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByZWN2bGR1bG9od3VkcGZtenNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwMDMwNzUsImV4cCI6MjEwMjU3OTA3NX0.BYpgOVlLG1cw5pdYfjrhI_bP615ALKCr1tb9U5Ooc0c';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            const form = document.getElementById('adminLoginForm');
+            const form = document.getElementById('loginForm');
+            const submitBtn = document.getElementById('submitBtn');
             const errorDiv = document.getElementById('errorMessage');
             const errorText = document.getElementById('errorText');
+            const emailInput = document.getElementById('loginEmail');
+            const passwordInput = document.getElementById('loginPassword');
 
+            // Toggle password
+            window.togglePassword = function() {
+                const icon = document.getElementById('toggleIcon');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            };
+
+            // Handle login
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 errorDiv.classList.remove('show');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
 
-                const email = document.getElementById('loginEmail').value.trim();
-                const password = document.getElementById('loginPassword').value.trim();
+                const email = emailInput.value.trim();
+                const password = passwordInput.value.trim();
+                const rememberMe = document.getElementById('rememberMe').checked;
 
                 if (!email || !password) {
-                    errorText.textContent = 'Please fill in all fields.';
+                    errorText.textContent = 'Please fill in both email and password.';
                     errorDiv.classList.add('show');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Log In';
                     return;
                 }
 
                 try {
-                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                    // Sign in with Supabase
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
                     if (error) {
-                        errorText.textContent = error.message.includes('Invalid login credentials') ? 'Invalid email or password.' : error.message;
+                        errorText.textContent = error.message.includes('Invalid login credentials') ?
+                            'Invalid email or password. Please try again.' :
+                            error.message;
                         errorDiv.classList.add('show');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Log In';
                         return;
                     }
 
-                    const { data: member } = await supabaseClient
+                    // Check if user is admin
+                    const { data: member, error: memberError } = await supabase
                         .from('members')
                         .select('source')
                         .eq('id', data.user.id)
                         .single();
 
+                    if (memberError) {
+                        errorText.textContent = 'Error checking admin status. Please try again.';
+                        errorDiv.classList.add('show');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Log In';
+                        return;
+                    }
+
                     if (member && member.source === 'admin') {
+                        // Store session
                         localStorage.setItem('isAdminLoggedIn', 'true');
-                        // ✅ FIXED: Redirect to adminpanel.html (no hyphen)
+                        if (rememberMe) {
+                            localStorage.setItem('adminRememberMe', 'true');
+                        } else {
+                            localStorage.removeItem('adminRememberMe');
+                        }
+                        // Redirect to admin panel
                         window.location.href = 'adminpanel.html';
                     } else {
                         errorText.textContent = 'Access denied. You are not an admin.';
                         errorDiv.classList.add('show');
-                        await supabaseClient.auth.signOut();
+                        await supabase.auth.signOut();
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Log In';
                     }
                 } catch (err) {
-                    errorText.textContent = 'Something went wrong. Please try again.';
+                    errorText.textContent = err.message || 'Something went wrong. Please try again.';
                     errorDiv.classList.add('show');
-                    console.error(err);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-arrow-right-to-bracket"></i> Log In';
+                    console.error('Login error:', err);
                 }
             });
+
+            // Check session
+            async function checkSession() {
+                if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+                    window.location.href = 'adminpanel.html';
+                    return;
+                }
+
+                // Check if user is already logged in via Supabase
+                try {
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (user) {
+                        const { data: member } = await supabase
+                            .from('members')
+                            .select('source')
+                            .eq('id', user.id)
+                            .single();
+                        if (member && member.source === 'admin') {
+                            localStorage.setItem('isAdminLoggedIn', 'true');
+                            window.location.href = 'adminpanel.html';
+                        }
+                    }
+                } catch (e) {
+                    console.log('Session check error:', e);
+                }
+            }
+            checkSession();
+
+            console.log('🔐 ProLoveHub Admin Login loaded.');
         });
     </script>
 
