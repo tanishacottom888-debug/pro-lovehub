@@ -4,916 +4,300 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Panel — ProLoveHub</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: #FAF9FB;
-            color: #2D2A2E;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: #fff;
-            padding: 14px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border-bottom: 1px solid #eee;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .navbar .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-        .navbar .logo .icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #C2185B, #E85D8A);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 18px;
-        }
-        .navbar .logo .brand {
-            font-size: 20px;
-            font-weight: 800;
-        }
-        .navbar .logo .brand .pro {
-            color: #C2185B;
-        }
-        .navbar .logo .brand .love {
-            color: #1A1423;
-        }
-        .navbar .logo .brand .hub {
-            color: #D4A54A;
-        }
-        .navbar .admin-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .navbar .admin-info .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #C2185B, #E85D8A);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 700;
-        }
-        .navbar .admin-info .logout-btn {
-            padding: 8px 20px;
-            border: 1px solid #ddd;
-            border-radius: 50px;
-            background: transparent;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-        .navbar .admin-info .logout-btn:hover {
-            background: #FFEBEE;
-            color: #C62828;
-            border-color: #C62828;
-        }
-
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 12px;
-            margin: 24px 0;
-        }
-        .stat-card {
-            background: #fff;
-            padding: 16px;
-            border-radius: 16px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-            border: 1px solid #eee;
-            text-align: center;
-        }
-        .stat-card .number {
-            font-size: 24px;
-            font-weight: 800;
-            color: #1A1423;
-        }
-        .stat-card .label {
-            font-size: 12px;
-            color: #6B6570;
-            font-weight: 500;
-        }
-        .stat-card .icon {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-        .stat-card .icon.primary {
-            color: #C2185B;
-        }
-        .stat-card .icon.gold {
-            color: #D4A54A;
-        }
-        .stat-card .icon.green {
-            color: #4CAF50;
-        }
-        .stat-card .icon.red {
-            color: #e74c3c;
-        }
-        .stat-card .icon.blue {
-            color: #1565C0;
-        }
-        .stat-card .icon.purple {
-            color: #7B1FA2;
-        }
-
-        /* Toolbar */
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .toolbar .search-box {
-            display: flex;
-            align-items: center;
-            background: #fff;
-            border-radius: 50px;
-            padding: 0 16px;
-            border: 1px solid #eee;
-            flex: 1;
-            max-width: 300px;
-        }
-        .toolbar .search-box input {
-            border: none;
-            padding: 10px 12px;
-            font-size: 14px;
-            background: transparent;
-            flex: 1;
-            outline: none;
-        }
-        .toolbar .actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .btn {
-            padding: 10px 22px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #C2185B, #E85D8A);
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(194, 24, 91, 0.25);
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(194, 24, 91, 0.35);
-        }
-        .btn-secondary {
-            background: #fff;
-            color: #2D2A2E;
-            border: 1px solid #ddd;
-        }
-        .btn-secondary:hover {
-            border-color: #C2185B;
-            color: #C2185B;
-        }
-
-        /* Table */
-        .table-container {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-            border: 1px solid #eee;
-            overflow: hidden;
-        }
-        .table-wrapper {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        table thead {
-            background: #FAF9FB;
-        }
-        table th {
-            padding: 12px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: #6B6570;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #eee;
-            white-space: nowrap;
-        }
-        table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f5f5f5;
-            vertical-align: middle;
-        }
-        table tr:hover td {
-            background: rgba(194, 24, 91, 0.02);
-        }
-        .member-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 13px;
-            color: #fff;
-            flex-shrink: 0;
-        }
-        .member-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .member-info .name {
-            font-weight: 600;
-            color: #2D2A2E;
-        }
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 3px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .status-badge.active {
-            background: #E8F5E9;
-            color: #2E7D32;
-        }
-        .status-badge.pending {
-            background: #FFF3E0;
-            color: #E65100;
-        }
-        .status-badge.rejected {
-            background: #FFEBEE;
-            color: #C62828;
-        }
-        .source-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 12px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .source-badge.admin {
-            background: #F8E8EE;
-            color: #C2185B;
-        }
-        .source-badge.app {
-            background: #E3F2FD;
-            color: #1565C0;
-        }
-        .action-btns {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
-        .action-btns button {
-            padding: 4px 10px;
-            border: none;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .action-btns .btn-edit {
-            background: #F8E8EE;
-            color: #C2185B;
-        }
-        .action-btns .btn-edit:hover {
-            background: #C2185B;
-            color: #fff;
-        }
-        .action-btns .btn-reject {
-            background: #FFF3E0;
-            color: #E65100;
-        }
-        .action-btns .btn-reject:hover {
-            background: #E65100;
-            color: #fff;
-        }
-        .action-btns .btn-remove {
-            background: #FFEBEE;
-            color: #C62828;
-        }
-        .action-btns .btn-remove:hover {
-            background: #C62828;
-            color: #fff;
-        }
-        .action-btns .btn-approve {
-            background: #E8F5E9;
-            color: #2E7D32;
-        }
-        .action-btns .btn-approve:hover {
-            background: #2E7D32;
-            color: #fff;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #9A94A3;
-        }
-        .empty-state i {
-            font-size: 48px;
-            color: #F8E8EE;
-            margin-bottom: 16px;
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(26, 20, 35, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.open {
-            display: flex;
-        }
-        .modal {
-            background: #fff;
-            border-radius: 16px;
-            max-width: 520px;
-            width: 100%;
-            padding: 32px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        .modal .modal-header h2 {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1A1423;
-        }
-        .modal .modal-header h2 .highlight {
-            color: #C2185B;
-        }
-        .modal .modal-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: #FAF9FB;
-            color: #9A94A3;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal .modal-close:hover {
-            background: #F8E8EE;
-            color: #C2185B;
-        }
-        .modal .form-group {
-            margin-bottom: 16px;
-        }
-        .modal .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #2D2A2E;
-            margin-bottom: 4px;
-        }
-        .modal .form-group input,
-        .modal .form-group select,
-        .modal .form-group textarea {
-            width: 100%;
-            padding: 11px 16px;
-            border-radius: 10px;
-            border: 1px solid #eee;
-            background: #FAF9FB;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .modal .form-group input:focus,
-        .modal .form-group select:focus {
-            border-color: #C2185B;
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(194, 24, 91, 0.06);
-        }
-        .modal .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .modal .modal-footer {
-            display: flex;
-            gap: 10px;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        .modal .modal-footer .btn {
-            flex: 1;
-            justify-content: center;
-        }
-
-        /* Toast */
-        .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .toast {
-            padding: 14px 24px;
-            border-radius: 10px;
-            color: #fff;
-            font-weight: 500;
-            font-size: 14px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 280px;
-            max-width: 420px;
-            animation: slideUp 0.3s ease;
-        }
-        .toast.success {
-            background: #2E7D32;
-        }
-        .toast.error {
-            background: #C62828;
-        }
-        .toast.info {
-            background: #8B0E3D;
-        }
-        .toast.warning {
-            background: #E65100;
-        }
-        .toast .toast-close {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            font-size: 16px;
-            margin-left: auto;
-        }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .modal .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .stat-card .number {
-                font-size: 18px;
-            }
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .toolbar .search-box {
-                max-width: 100%;
-            }
-            .modal .modal-footer {
-                flex-direction: column;
-            }
-        }
+        body { font-family: Arial, sans-serif; background: #f5f0f2; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 16px 24px; border-radius: 12px; }
+        .btn { padding: 10px 20px; border-radius: 50px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-primary { background: #C2185B; color: white; }
+        .btn-secondary { background: #ddd; color: #333; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal.open { display: flex; }
+        .modal-content { background: white; padding: 32px; border-radius: 16px; max-width: 500px; width: 100%; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 4px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .form-row { display: flex; gap: 12px; }
+        .form-row > * { flex: 1; }
+        table { width: 100%; background: white; border-radius: 12px; overflow: hidden; }
+        th { background: #f9f9f9; padding: 12px; text-align: left; }
+        td { padding: 12px; border-top: 1px solid #eee; }
+        .actions { display: flex; gap: 4px; }
+        .actions button { padding: 4px 10px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-edit { background: #f0e6f0; color: #C2185B; }
+        .btn-remove { background: #f8d7da; color: #721c24; }
+        .btn-approve { background: #d4edda; color: #155724; }
+        .btn-reject { background: #f8d7da; color: #721c24; }
+        .status-badge { padding: 2px 12px; border-radius: 50px; font-size: 12px; font-weight: 600; }
+        .status-active { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 12px 24px; border-radius: 10px; z-index: 999; }
     </style>
 </head>
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="container">
-            <a href="#" class="logo">
-                <div class="icon"><i class="fas fa-heart"></i></div>
-                <span class="brand"><span class="pro">Pro</span><span class="love">Love</span><span class="hub">Hub</span></span>
-            </a>
-            <div class="admin-info">
-                <span style="font-size:13px;color:#6B6570;">Admin Panel</span>
-                <div class="avatar">AD</div>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </div>
-        </div>
-    </nav>
-
     <div class="container">
-        <!-- Stats -->
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card"><div class="icon primary"><i class="fas fa-users"></i></div><div class="number" id="totalMembers">0</div><div class="label">Total</div></div>
-            <div class="stat-card"><div class="icon gold"><i class="fas fa-user-check"></i></div><div class="number" id="activeMembers">0</div><div class="label">Active</div></div>
-            <div class="stat-card"><div class="icon green"><i class="fas fa-clock"></i></div><div class="number" id="pendingMembers">0</div><div class="label">Pending</div></div>
-            <div class="stat-card"><div class="icon red"><i class="fas fa-user-slash"></i></div><div class="number" id="rejectedMembers">0</div><div class="label">Rejected</div></div>
-            <div class="stat-card"><div class="icon blue"><i class="fas fa-user-cog"></i></div><div class="number" id="adminAddedCount">0</div><div class="label">Admin Added</div></div>
-            <div class="stat-card"><div class="icon purple"><i class="fas fa-mobile-alt"></i></div><div class="number" id="appSignupCount">0</div><div class="label">App Sign-ups</div></div>
+        <div class="header">
+            <h1>🔐 Admin Panel</h1>
+            <button class="btn btn-primary" onclick="logout()">Logout</button>
         </div>
 
-        <!-- Toolbar -->
-        <div class="toolbar">
-            <div class="search-box">
-                <i class="fas fa-search" style="color:#9A94A3;"></i>
-                <input type="text" id="searchInput" placeholder="Search members..." />
-            </div>
-            <div class="actions">
-                <button class="btn btn-primary" id="addMemberBtn"><i class="fas fa-plus"></i> Add Member</button>
-                <button class="btn btn-secondary" id="resetBtn"><i class="fas fa-undo"></i> Reset</button>
-            </div>
+        <div style="margin: 20px 0; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="openAddModal()">➕ Add Member</button>
+            <button class="btn btn-secondary" onclick="loadMembers()">🔄 Refresh</button>
         </div>
 
-        <!-- Table -->
-        <div class="table-container">
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Member</th>
-                            <th>Email</th>
-                            <th>Gender</th>
-                            <th>Looking For</th>
-                            <th>Status</th>
-                            <th>Source</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="membersTableBody">
-                        <tr>
-                            <td colspan="8"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>Loading members...</h3></div></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div id="stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;"></div>
+
+        <div style="background:white;border-radius:12px;overflow:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Looking For</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="membersBody">
+                    <tr><td colspan="7" style="text-align:center;padding:40px;">Loading...</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
     <!-- Modal -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 id="modalTitle">Add <span class="highlight">Member</span></h2>
-                <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
-            </div>
+    <div class="modal" id="memberModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add Member</h2>
             <form id="memberForm">
                 <input type="hidden" id="editId" />
-                <div class="form-group"><label>Full Name <span style="color:#C2185B;">*</span></label><input type="text" id="formName" placeholder="e.g. Jessica Smith" required /></div>
-                <div class="form-group"><label>Email <span style="color:#C2185B;">*</span></label><input type="email" id="formEmail" placeholder="you@example.com" required /></div>
+                <div class="form-group"><label>Full Name *</label><input type="text" id="formName" required /></div>
+                <div class="form-group"><label>Email *</label><input type="email" id="formEmail" required /></div>
                 <div class="form-row">
-                    <div class="form-group"><label>Gender <span style="color:#C2185B;">*</span></label><select id="formGender" required><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
-                    <div class="form-group"><label>Looking For <span style="color:#C2185B;">*</span></label><select id="formLookingFor" required><option value="">Select</option><option value="Men">Men</option><option value="Women">Women</option><option value="Everyone">Everyone</option></select></div>
+                    <div class="form-group"><label>Gender *</label><select id="formGender" required><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+                    <div class="form-group"><label>Looking For *</label><select id="formLookingFor" required><option value="">Select</option><option>Men</option><option>Women</option><option>Everyone</option></select></div>
                 </div>
                 <div class="form-row">
                     <div class="form-group"><label>Date of Birth</label><input type="date" id="formDob" /></div>
-                    <div class="form-group"><label>Location</label><input type="text" id="formLocation" placeholder="Toronto, ON" /></div>
+                    <div class="form-group"><label>Location</label><input type="text" id="formLocation" placeholder="City" /></div>
                 </div>
-                <div class="form-group"><label>Bio</label><textarea id="formBio" placeholder="About this member..." rows="3"></textarea></div>
-                <div class="form-group"><label>Interests (comma separated)</label><input type="text" id="formInterests" placeholder="Travel, Music, Hiking" /></div>
+                <div class="form-group"><label>Bio</label><textarea id="formBio" rows="2"></textarea></div>
+                <div class="form-group"><label>Interests</label><input type="text" id="formInterests" placeholder="Travel, Music" /></div>
                 <div class="form-group"><label>Status</label><select id="formStatus"><option value="active">Active</option><option value="pending" selected>Pending</option><option value="rejected">Rejected</option></select></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="formSubmitBtn"><i class="fas fa-save"></i> Save Member</button>
+                <div style="display:flex;gap:10px;margin-top:20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1;">Save Member</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
+    <div id="toastContainer"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const SUPABASE_URL = 'https://precvldulohwudpfmzsn.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByZWN2bGR1bG9od3VkcGZtenNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwMDMwNzUsImV4cCI6MjEwMjU3OTA3NX0.BYpgOVlLG1cw5pdYfjrhI_bP615ALKCr1tb9U5Ooc0c';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Supabase Config
+        const SUPABASE_URL = 'https://precvldulohwudpfmzsn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByZWN2bGR1bG9od3VkcGZtenNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwMDMwNzUsImV4cCI6MjEwMjU3OTA3NX0.BYpgOVlLG1cw5pdYfjrhI_bP615ALKCr1tb9U5Ooc0c';
+        const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            let members = [];
-            let currentFilter = 'all';
-            let searchQuery = '';
+        let members = [];
+        let currentEditId = null;
 
-            // DOM refs
-            const tbody = document.getElementById('membersTableBody');
-            const searchInput = document.getElementById('searchInput');
-            const modal = document.getElementById('modalOverlay');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const cancelModalBtn = document.getElementById('cancelModalBtn');
-            const addMemberBtn = document.getElementById('addMemberBtn');
-            const resetBtn = document.getElementById('resetBtn');
-            const memberForm = document.getElementById('memberForm');
-            const editId = document.getElementById('editId');
-            const modalTitle = document.getElementById('modalTitle');
-            const formSubmitBtn = document.getElementById('formSubmitBtn');
+        // Check admin
+        async function checkAdmin() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) { window.location.href = 'adminlogin.html'; return false; }
+            const { data: member } = await supabase.from('members').select('source').eq('id', user.id).single();
+            if (!member || member.source !== 'admin') {
+                alert('Access denied.');
+                window.location.href = 'loginpage.html';
+                return false;
+            }
+            return true;
+        }
 
-            // Toast helper
-            function showToast(msg, type = 'info') {
-                const container = document.getElementById('toastContainer');
-                const div = document.createElement('div');
-                div.className = 'toast ' + type;
-                div.innerHTML = msg + '<button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>';
-                container.appendChild(div);
-                setTimeout(() => div.remove(), 4000);
+        // Load members
+        async function loadMembers() {
+            const { data, error } = await supabase.from('members').select('*').order('created_at', { ascending: false });
+            if (error) { showToast('Error: ' + error.message, 'error'); return; }
+            members = data || [];
+            render();
+        }
+
+        // Render
+        function render() {
+            const tbody = document.getElementById('membersBody');
+
+            // Stats
+            const total = members.length;
+            const active = members.filter(m => m.status === 'active').length;
+            const pending = members.filter(m => m.status === 'pending').length;
+            const rejected = members.filter(m => m.status === 'rejected').length;
+            document.getElementById('stats').innerHTML = `
+                <div style="background:#fff;padding:16px;border-radius:12px;text-align:center;"><strong>${total}</strong><br>Total</div>
+                <div style="background:#fff;padding:16px;border-radius:12px;text-align:center;"><strong>${active}</strong><br>Active</div>
+                <div style="background:#fff;padding:16px;border-radius:12px;text-align:center;"><strong>${pending}</strong><br>Pending</div>
+                <div style="background:#fff;padding:16px;border-radius:12px;text-align:center;"><strong>${rejected}</strong><br>Rejected</div>
+            `;
+
+            if (members.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">No members found</td></tr>';
+                return;
             }
 
-            // Check admin session
-            async function checkAdmin() {
-                const { data: { user } } = await supabaseClient.auth.getUser();
-                if (!user) {
-                    window.location.href = 'admin-login.html';
-                    return false;
-                }
-                const { data: member } = await supabaseClient.from('members').select('source').eq('id', user.id).single();
-                if (!member || member.source !== 'admin') {
-                    alert('Access denied. Admin privileges required.');
-                    window.location.href = 'index.html';
-                    return false;
-                }
-                return true;
+            let html = '';
+            members.forEach((m, i) => {
+                const statusClass = m.status === 'active' ? 'status-active' : m.status === 'pending' ? 'status-pending' :
+                    'status-rejected';
+                html += `<tr>
+                    <td>${i+1}</td>
+                    <td><strong>${m.name}</strong></td>
+                    <td>${m.email}</td>
+                    <td>${m.gender || '—'}</td>
+                    <td>${m.looking_for || '—'}</td>
+                    <td><span class="status-badge ${statusClass}">${m.status || 'pending'}</span></td>
+                    <td class="actions">
+                        ${m.status === 'pending' || m.status === 'rejected' ? `<button class="btn-approve" onclick="approveMember('${m.id}')">Approve</button>` : ''}
+                        <button class="btn-edit" onclick="openEditModal('${m.id}')">Edit</button>
+                        ${m.status !== 'rejected' ? `<button class="btn-reject" onclick="rejectMember('${m.id}')">Reject</button>` : ''}
+                        <button class="btn-remove" onclick="removeMember('${m.id}')">Remove</button>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // CRUD
+        async function approveMember(id) {
+            if (!confirm('Approve this member?')) return;
+            const { error } = await supabase.from('members').update({ status: 'active' }).eq('id', id);
+            if (error) showToast('Error: ' + error.message, 'error');
+            else { showToast('Approved!', 'success');
+                loadMembers(); }
+        }
+
+        async function rejectMember(id) {
+            if (!confirm('Reject this member?')) return;
+            const { error } = await supabase.from('members').update({ status: 'rejected' }).eq('id', id);
+            if (error) showToast('Error: ' + error.message, 'error');
+            else { showToast('Rejected.', 'warning');
+                loadMembers(); }
+        }
+
+        async function removeMember(id) {
+            if (!confirm('Remove permanently?')) return;
+            const { error } = await supabase.from('members').delete().eq('id', id);
+            if (error) showToast('Error: ' + error.message, 'error');
+            else { showToast('Removed.', 'error');
+                loadMembers(); }
+        }
+
+        // Modal functions
+        function openAddModal() {
+            currentEditId = null;
+            document.getElementById('editId').value = '';
+            document.getElementById('formName').value = '';
+            document.getElementById('formEmail').value = '';
+            document.getElementById('formGender').value = '';
+            document.getElementById('formLookingFor').value = '';
+            document.getElementById('formDob').value = '';
+            document.getElementById('formLocation').value = '';
+            document.getElementById('formBio').value = '';
+            document.getElementById('formInterests').value = '';
+            document.getElementById('formStatus').value = 'pending';
+            document.getElementById('modalTitle').textContent = 'Add Member';
+            document.getElementById('memberModal').classList.add('open');
+        }
+
+        function openEditModal(id) {
+            const member = members.find(m => m.id === id);
+            if (!member) return;
+            currentEditId = id;
+            document.getElementById('editId').value = id;
+            document.getElementById('formName').value = member.name;
+            document.getElementById('formEmail').value = member.email;
+            document.getElementById('formGender').value = member.gender || '';
+            document.getElementById('formLookingFor').value = member.looking_for || '';
+            document.getElementById('formDob').value = member.dob || '';
+            document.getElementById('formLocation').value = member.location || '';
+            document.getElementById('formBio').value = member.bio || '';
+            document.getElementById('formInterests').value = (member.interests || []).join(', ');
+            document.getElementById('formStatus').value = member.status || 'pending';
+            document.getElementById('modalTitle').textContent = 'Edit Member';
+            document.getElementById('memberModal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('memberModal').classList.remove('open');
+        }
+
+        // Form submit
+        document.getElementById('memberForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            const data = {
+                name: document.getElementById('formName').value.trim(),
+                email: document.getElementById('formEmail').value.trim(),
+                gender: document.getElementById('formGender').value,
+                looking_for: document.getElementById('formLookingFor').value,
+                dob: document.getElementById('formDob').value || null,
+                location: document.getElementById('formLocation').value.trim() || null,
+                bio: document.getElementById('formBio').value.trim() || null,
+                interests: document.getElementById('formInterests').value.trim() ? document.getElementById('formInterests')
+                    .value.trim().split(',').map(s => s.trim()).filter(Boolean) : [],
+                status: document.getElementById('formStatus').value
+            };
+
+            if (!data.name || !data.email || !data.gender || !data.looking_for) {
+                showToast('Please fill in all required fields.', 'error');
+                return;
             }
 
-            // Load members
-            async function loadMembers() {
-                const { data, error } = await supabaseClient.from('members').select('*').order('created_at', { ascending: false });
-                if (error) {
-                    showToast('Error loading members: ' + error.message, 'error');
-                    return;
-                }
-                members = data || [];
-                render();
-            }
-
-            // Render
-            function render() {
-                // Stats
-                document.getElementById('totalMembers').textContent = members.length;
-                document.getElementById('activeMembers').textContent = members.filter(m => m.status === 'active').length;
-                document.getElementById('pendingMembers').textContent = members.filter(m => m.status === 'pending').length;
-                document.getElementById('rejectedMembers').textContent = members.filter(m => m.status === 'rejected').length;
-                document.getElementById('adminAddedCount').textContent = members.filter(m => m.source === 'admin').length;
-                document.getElementById('appSignupCount').textContent = members.filter(m => m.source === 'app').length;
-
-                // Filter
-                let filtered = [...members];
-                if (currentFilter === 'pending') filtered = filtered.filter(m => m.status === 'pending');
-                else if (currentFilter === 'rejected') filtered = filtered.filter(m => m.status === 'rejected');
-                else if (currentFilter === 'active') filtered = filtered.filter(m => m.status === 'active');
-                if (searchQuery.trim()) {
-                    const q = searchQuery.trim().toLowerCase();
-                    filtered = filtered.filter(m => m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q));
-                }
-
-                if (filtered.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fas fa-users-slash"></i><h3>No members found</h3></div></td></tr>`;
-                    return;
-                }
-
-                const colors = ['#C2185B', '#D4A54A', '#4CAF50', '#7B1FA2', '#00695C', '#E65100'];
-                let html = '';
-                filtered.forEach((m, i) => {
-                    const initials = m.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-                    const color = colors[i % colors.length];
-                    const statusClass = m.status || 'pending';
-                    const sourceClass = (m.source === 'admin') ? 'source-badge admin' : 'source-badge app';
-                    html += `<tr>
-                        <td>${i + 1}</td>
-                        <td><div class="member-info"><div class="member-avatar" style="background:${color};">${initials}</div><div class="name">${escapeHtml(m.name)}</div></div></td>
-                        <td>${escapeHtml(m.email)}</td>
-                        <td>${escapeHtml(m.gender || '—')}</td>
-                        <td>${escapeHtml(m.lookingFor || '—')}</td>
-                        <td><span class="status-badge ${statusClass}">${statusClass}</span></td>
-                        <td><span class="${sourceClass}">${m.source || 'app'}</span></td>
-                        <td><div class="action-btns">
-                            ${m.status === 'pending' || m.status === 'rejected' ? `<button class="btn-approve" data-id="${m.id}" data-action="approve"><i class="fas fa-check"></i> Approve</button>` : ''}
-                            <button class="btn-edit" data-id="${m.id}" data-action="edit"><i class="fas fa-pen"></i> Edit</button>
-                            ${m.status !== 'rejected' ? `<button class="btn-reject" data-id="${m.id}" data-action="reject"><i class="fas fa-times"></i> Reject</button>` : ''}
-                            <button class="btn-remove" data-id="${m.id}" data-action="remove"><i class="fas fa-trash"></i> Remove</button>
-                        </div></td>
-                    </tr>`;
-                });
-                tbody.innerHTML = html;
-
-                // Attach action listeners
-                document.querySelectorAll('[data-action]').forEach(btn => {
-                    btn.addEventListener('click', async function(e) {
-                        const id = this.dataset.id;
-                        const action = this.dataset.action;
-                        if (action === 'approve') {
-                            const { error } = await supabaseClient.from('members').update({ status: 'active' }).eq('id', id);
-                            if (error) showToast('Error: ' + error.message, 'error');
-                            else { showToast('Member approved!', 'success');
-                                loadMembers(); }
-                        } else if (action === 'reject') {
-                            if (!confirm('Reject this member?')) return;
-                            const { error } = await supabaseClient.from('members').update({ status: 'rejected' }).eq('id', id);
-                            if (error) showToast('Error: ' + error.message, 'error');
-                            else { showToast('Member rejected.', 'warning');
-                                loadMembers(); }
-                        } else if (action === 'remove') {
-                            if (!confirm('Remove this member permanently?')) return;
-                            const { error } = await supabaseClient.from('members').delete().eq('id', id);
-                            if (error) showToast('Error: ' + error.message, 'error');
-                            else { showToast('Member removed.', 'error');
-                                loadMembers(); }
-                        } else if (action === 'edit') {
-                            openEditModal(id);
-                        }
-                    });
-                });
-            }
-
-            function escapeHtml(text) {
-                if (!text) return '—';
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-
-            // Open edit modal
-            function openEditModal(id) {
-                const member = members.find(m => m.id === id);
-                if (!member) return;
-                editId.value = id;
-                document.getElementById('formName').value = member.name;
-                document.getElementById('formEmail').value = member.email;
-                document.getElementById('formGender').value = member.gender || '';
-                document.getElementById('formLookingFor').value = member.lookingFor || '';
-                document.getElementById('formDob').value = member.dob || '';
-                document.getElementById('formLocation').value = member.location || '';
-                document.getElementById('formBio').value = member.bio || '';
-                document.getElementById('formInterests').value = (member.interests || []).join(', ');
-                document.getElementById('formStatus').value = member.status || 'pending';
-                modalTitle.textContent = 'Edit Member';
-                formSubmitBtn.textContent = 'Update Member';
-                modal.classList.add('open');
-            }
-
-            // Open add modal
-            function openAddModal() {
-                editId.value = '';
-                document.getElementById('formName').value = '';
-                document.getElementById('formEmail').value = '';
-                document.getElementById('formGender').value = '';
-                document.getElementById('formLookingFor').value = '';
-                document.getElementById('formDob').value = '';
-                document.getElementById('formLocation').value = '';
-                document.getElementById('formBio').value = '';
-                document.getElementById('formInterests').value = '';
-                document.getElementById('formStatus').value = 'pending';
-                modalTitle.textContent = 'Add Member';
-                formSubmitBtn.textContent = 'Add Member';
-                modal.classList.add('open');
-            }
-
-            // Close modal
-            function closeModal() {
-                modal.classList.remove('open');
-            }
-
-            // Form submit
-            memberForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const id = editId.value;
-                const data = {
-                    name: document.getElementById('formName').value.trim(),
-                    email: document.getElementById('formEmail').value.trim(),
-                    gender: document.getElementById('formGender').value,
-                    lookingFor: document.getElementById('formLookingFor').value,
-                    dob: document.getElementById('formDob').value,
-                    location: document.getElementById('formLocation').value.trim(),
-                    bio: document.getElementById('formBio').value.trim(),
-                    interests: document.getElementById('formInterests').value.trim().split(',').map(s => s.trim())
-                        .filter(Boolean),
-                    status: document.getElementById('formStatus').value
-                };
-                if (!data.name || !data.email || !data.gender || !data.lookingFor) {
-                    showToast('Please fill in all required fields.', 'error');
-                    return;
-                }
-                let result;
-                if (id) {
-                    result = await supabaseClient.from('members').update(data).eq('id', id);
-                } else {
-                    result = await supabaseClient.from('members').insert([{ ...data,
-                        source: 'admin' }]);
-                }
-                if (result.error) {
-                    showToast('Error: ' + result.error.message, 'error');
-                } else {
-                    showToast(id ? 'Member updated!' : 'Member added!', 'success');
+            let result;
+            if (id) {
+                result = await supabase.from('members').update(data).eq('id', id);
+                if (result.error) showToast('Error: ' + result.error.message, 'error');
+                else { showToast('Updated!', 'success');
                     closeModal();
-                    loadMembers();
-                }
-            });
-
-            // Event listeners
-            addMemberBtn.addEventListener('click', openAddModal);
-            closeModalBtn.addEventListener('click', closeModal);
-            cancelModalBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
-
-            searchInput.addEventListener('input', function() {
-                searchQuery = this.value;
-                render();
-            });
-
-            resetBtn.addEventListener('click', function() {
-                searchQuery = '';
-                currentFilter = 'all';
-                searchInput.value = '';
-                render();
-            });
-
-            // Logout
-            document.getElementById('logoutBtn').addEventListener('click', async function() {
-                if (confirm('Logout?')) {
-                    await supabaseClient.auth.signOut();
-                    localStorage.removeItem('isAdminLoggedIn');
-                    window.location.href = 'index.html';
-                }
-            });
-
-            // Init
-            (async function init() {
-                const ok = await checkAdmin();
-                if (ok) {
-                    await loadMembers();
-                    console.log('🔐 ProLoveHub Admin Panel loaded.');
-                }
-            })();
+                    loadMembers(); }
+            } else {
+                result = await supabase.from('members').insert([{ ...data, source: 'admin' }]);
+                if (result.error) showToast('Error: ' + result.error.message, 'error');
+                else { showToast('Added!', 'success');
+                    closeModal();
+                    loadMembers(); }
+            }
         });
-    </script>
 
+        // Toast
+        function showToast(msg, type) {
+            const container = document.getElementById('toastContainer');
+            const div = document.createElement('div');
+            div.className = 'toast';
+            div.textContent = msg;
+            container.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+
+        // Logout
+        async function logout() {
+            if (confirm('Logout?')) {
+                await supabase.auth.signOut();
+                localStorage.removeItem('isAdminLoggedIn');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Init
+        (async function init() {
+            const ok = await checkAdmin();
+            if (ok) await loadMembers();
+        })();
+    </script>
 </body>
 </html>
