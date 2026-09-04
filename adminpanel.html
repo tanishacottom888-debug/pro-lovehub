@@ -4,31 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Panel — ProLoveHub</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #C2185B;
+            --primary-light: #F8E8EE;
+            --primary-gradient: linear-gradient(135deg, #C2185B, #E85D8A);
+            --secondary: #D4A54A;
+            --dark: #1A1423;
+            --text: #2D2A2E;
+            --text-light: #6B6570;
+            --text-lighter: #9A94A3;
+            --white: #FFFFFF;
+            --off-white: #FAF9FB;
+            --shadow-sm: 0 4px 20px rgba(26,20,35,0.06);
+            --shadow-md: 0 12px 40px rgba(26,20,35,0.08);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
         }
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: #FAF9FB;
-            color: #2D2A2E;
+            font-family: 'Inter', sans-serif;
+            background: var(--off-white);
+            color: var(--text);
             min-height: 100vh;
         }
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
 
-        /* Navbar */
         .navbar {
             background: #fff;
             padding: 14px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             border-bottom: 1px solid #eee;
             position: sticky;
             top: 0;
@@ -46,9 +54,8 @@
             text-decoration: none;
         }
         .navbar .logo .icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #C2185B, #E85D8A);
+            width: 40px; height: 40px;
+            background: var(--primary-gradient);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -57,28 +64,22 @@
             font-size: 18px;
         }
         .navbar .logo .brand {
+            font-family: 'Playfair Display', serif;
             font-size: 20px;
             font-weight: 800;
         }
-        .navbar .logo .brand .pro {
-            color: #C2185B;
-        }
-        .navbar .logo .brand .love {
-            color: #1A1423;
-        }
-        .navbar .logo .brand .hub {
-            color: #D4A54A;
-        }
+        .navbar .logo .brand .pro { color: var(--primary); }
+        .navbar .logo .brand .love { color: var(--dark); }
+        .navbar .logo .brand .hub { color: var(--secondary); }
         .navbar .admin-info {
             display: flex;
             align-items: center;
             gap: 16px;
         }
         .navbar .admin-info .avatar {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #C2185B, #E85D8A);
+            background: var(--primary-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -91,6 +92,7 @@
             border-radius: 50px;
             background: transparent;
             cursor: pointer;
+            font-family: 'Inter', sans-serif;
             font-size: 13px;
             font-weight: 500;
             transition: 0.3s;
@@ -101,7 +103,6 @@
             border-color: #C62828;
         }
 
-        /* Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -111,45 +112,21 @@
         .stat-card {
             background: #fff;
             padding: 16px;
-            border-radius: 16px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
             border: 1px solid #eee;
             text-align: center;
         }
-        .stat-card .number {
-            font-size: 24px;
-            font-weight: 800;
-            color: #1A1423;
-        }
-        .stat-card .label {
-            font-size: 12px;
-            color: #6B6570;
-            font-weight: 500;
-        }
-        .stat-card .icon {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-        .stat-card .icon.primary {
-            color: #C2185B;
-        }
-        .stat-card .icon.gold {
-            color: #D4A54A;
-        }
-        .stat-card .icon.green {
-            color: #4CAF50;
-        }
-        .stat-card .icon.red {
-            color: #e74c3c;
-        }
-        .stat-card .icon.blue {
-            color: #1565C0;
-        }
-        .stat-card .icon.purple {
-            color: #7B1FA2;
-        }
+        .stat-card .number { font-size: 24px; font-weight: 800; color: var(--dark); }
+        .stat-card .label { font-size: 12px; color: var(--text-light); font-weight: 500; }
+        .stat-card .icon { font-size: 20px; margin-bottom: 4px; }
+        .stat-card .icon.primary { color: var(--primary); }
+        .stat-card .icon.gold { color: var(--secondary); }
+        .stat-card .icon.green { color: #4CAF50; }
+        .stat-card .icon.red { color: #e74c3c; }
+        .stat-card .icon.blue { color: #1565C0; }
+        .stat-card .icon.purple { color: #7B1FA2; }
 
-        /* Toolbar */
         .toolbar {
             display: flex;
             justify-content: space-between;
@@ -171,88 +148,64 @@
         .toolbar .search-box input {
             border: none;
             padding: 10px 12px;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             background: transparent;
             flex: 1;
             outline: none;
         }
-        .toolbar .actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .toolbar .actions { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn {
             padding: 10px 22px;
             border-radius: 50px;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             font-weight: 600;
             border: none;
             cursor: pointer;
-            transition: 0.3s;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #C2185B, #E85D8A);
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(194, 24, 91, 0.25);
+            background: var(--primary-gradient);
+            color: var(--white);
+            box-shadow: 0 4px 16px rgba(194,24,91,0.25);
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(194, 24, 91, 0.35);
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(194,24,91,0.35); }
         .btn-secondary {
             background: #fff;
-            color: #2D2A2E;
+            color: var(--text);
             border: 1px solid #ddd;
         }
-        .btn-secondary:hover {
-            border-color: #C2185B;
-            color: #C2185B;
-        }
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
 
-        /* Table */
         .table-container {
             background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
             border: 1px solid #eee;
             overflow: hidden;
         }
-        .table-wrapper {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        table thead {
-            background: #FAF9FB;
-        }
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        table thead { background: #FAF9FB; }
         table th {
             padding: 12px 16px;
             text-align: left;
             font-weight: 600;
-            color: #6B6570;
+            color: var(--text-light);
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 1px solid #eee;
             white-space: nowrap;
         }
-        table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f5f5f5;
-            vertical-align: middle;
-        }
-        table tr:hover td {
-            background: rgba(194, 24, 91, 0.02);
-        }
+        table td { padding: 12px 16px; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+        table tr:hover td { background: rgba(194,24,91,0.02); }
         .member-avatar {
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -261,16 +214,15 @@
             font-size: 13px;
             color: #fff;
             flex-shrink: 0;
+            object-fit: cover;
+            background: var(--primary-light);
+            overflow: hidden;
         }
-        .member-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .member-avatar img {
+            width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
         }
-        .member-info .name {
-            font-weight: 600;
-            color: #2D2A2E;
-        }
+        .member-info { display: flex; align-items: center; gap: 10px; }
+        .member-info .name { font-weight: 600; color: var(--dark); }
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -280,18 +232,9 @@
             font-size: 12px;
             font-weight: 600;
         }
-        .status-badge.active {
-            background: #E8F5E9;
-            color: #2E7D32;
-        }
-        .status-badge.pending {
-            background: #FFF3E0;
-            color: #E65100;
-        }
-        .status-badge.rejected {
-            background: #FFEBEE;
-            color: #C62828;
-        }
+        .status-badge.active { background: #E8F5E9; color: #2E7D32; }
+        .status-badge.pending { background: #FFF3E0; color: #E65100; }
+        .status-badge.rejected { background: #FFEBEE; color: #C62828; }
         .source-badge {
             display: inline-flex;
             align-items: center;
@@ -301,263 +244,145 @@
             font-size: 11px;
             font-weight: 600;
         }
-        .source-badge.admin {
-            background: #F8E8EE;
-            color: #C2185B;
-        }
-        .source-badge.app {
-            background: #E3F2FD;
-            color: #1565C0;
-        }
-        .action-btns {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
+        .source-badge.admin { background: var(--primary-light); color: var(--primary); }
+        .source-badge.app { background: #E3F2FD; color: #1565C0; }
+        .action-btns { display: flex; gap: 4px; flex-wrap: wrap; }
         .action-btns button {
             padding: 4px 10px;
             border: none;
             border-radius: 6px;
             font-size: 12px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
             font-weight: 500;
             display: inline-flex;
             align-items: center;
             gap: 4px;
         }
-        .action-btns .btn-edit {
-            background: #F8E8EE;
-            color: #C2185B;
-        }
-        .action-btns .btn-edit:hover {
-            background: #C2185B;
-            color: #fff;
-        }
-        .action-btns .btn-reject {
-            background: #FFF3E0;
-            color: #E65100;
-        }
-        .action-btns .btn-reject:hover {
-            background: #E65100;
-            color: #fff;
-        }
-        .action-btns .btn-remove {
-            background: #FFEBEE;
-            color: #C62828;
-        }
-        .action-btns .btn-remove:hover {
-            background: #C62828;
-            color: #fff;
-        }
-        .action-btns .btn-approve {
-            background: #E8F5E9;
-            color: #2E7D32;
-        }
-        .action-btns .btn-approve:hover {
-            background: #2E7D32;
-            color: #fff;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #9A94A3;
-        }
-        .empty-state i {
-            font-size: 48px;
-            color: #F8E8EE;
-            margin-bottom: 16px;
-        }
+        .action-btns .btn-edit { background: var(--primary-light); color: var(--primary); }
+        .action-btns .btn-edit:hover { background: var(--primary); color: #fff; }
+        .action-btns .btn-reject { background: #FFF3E0; color: #E65100; }
+        .action-btns .btn-reject:hover { background: #E65100; color: #fff; }
+        .action-btns .btn-remove { background: #FFEBEE; color: #C62828; }
+        .action-btns .btn-remove:hover { background: #C62828; color: #fff; }
+        .action-btns .btn-approve { background: #E8F5E9; color: #2E7D32; }
+        .action-btns .btn-approve:hover { background: #2E7D32; color: #fff; }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-lighter); }
+        .empty-state i { font-size: 48px; color: var(--primary-light); margin-bottom: 16px; }
+        .empty-state h3 { color: var(--text); font-weight: 600; }
 
-        /* Modal */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(26, 20, 35, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26,20,35,0.5); backdrop-filter: blur(4px);
+            z-index: 1000; display: none; align-items: center; justify-content: center;
             padding: 20px;
         }
-        .modal-overlay.open {
-            display: flex;
-        }
+        .modal-overlay.open { display: flex; }
         .modal {
-            background: #fff;
-            border-radius: 16px;
-            max-width: 520px;
-            width: 100%;
-            padding: 32px;
-            max-height: 90vh;
-            overflow-y: auto;
+            background: #fff; border-radius: var(--radius);
+            max-width: 580px; width: 100%; padding: 32px;
+            max-height: 90vh; overflow-y: auto;
         }
-        .modal .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        .modal .modal-header h2 {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1A1423;
-        }
-        .modal .modal-header h2 .highlight {
-            color: #C2185B;
-        }
+        .modal .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal .modal-header h2 { font-size: 22px; font-weight: 800; color: var(--dark); }
+        .modal .modal-header h2 .highlight { color: var(--primary); }
         .modal .modal-close {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            background: #FAF9FB;
-            color: #9A94A3;
-            cursor: pointer;
-            font-size: 18px;
+            width: 40px; height: 40px; border-radius: 50%;
+            border: none; background: var(--off-white); color: var(--text-lighter);
+            cursor: pointer; font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal .modal-close:hover { background: var(--primary-light); color: var(--primary); }
+        .modal .form-group { margin-bottom: 16px; }
+        .modal .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .modal .form-group input, .modal .form-group select, .modal .form-group textarea {
+            width: 100%; padding: 11px 16px; border-radius: var(--radius-sm);
+            border: 1px solid #eee; background: var(--off-white);
+            font-family: 'Inter', sans-serif; font-size: 14px; color: var(--text);
+            outline: none; transition: var(--transition);
+        }
+        .modal .form-group input:focus, .modal .form-group select:focus {
+            border-color: var(--primary); background: #fff;
+            box-shadow: 0 0 0 4px rgba(194,24,91,0.06);
+        }
+        .modal .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .modal .modal-footer { display: flex; gap: 10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #eee; }
+        .modal .modal-footer .btn { flex: 1; justify-content: center; }
+
+        /* Photo Upload Styles */
+        .photo-upload-container {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
         }
-        .modal .modal-close:hover {
-            background: #F8E8EE;
-            color: #C2185B;
+        .photo-upload-container .photo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+            background: var(--off-white);
         }
-        .modal .form-group {
-            margin-bottom: 16px;
-        }
-        .modal .form-group label {
-            display: block;
+        .photo-upload-container .photo-upload-btn {
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid #ddd;
+            background: var(--off-white);
+            cursor: pointer;
             font-size: 13px;
-            font-weight: 600;
-            color: #2D2A2E;
-            margin-bottom: 4px;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
         }
-        .modal .form-group input,
-        .modal .form-group select,
-        .modal .form-group textarea {
-            width: 100%;
-            padding: 11px 16px;
-            border-radius: 10px;
-            border: 1px solid #eee;
-            background: #FAF9FB;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
+        .photo-upload-container .photo-upload-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
         }
-        .modal .form-group input:focus,
-        .modal .form-group select:focus {
-            border-color: #C2185B;
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(194, 24, 91, 0.06);
-        }
-        .modal .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .modal .modal-footer {
-            display: flex;
-            gap: 10px;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        .modal .modal-footer .btn {
-            flex: 1;
-            justify-content: center;
-        }
+        .photo-upload-container input[type="file"] { display: none; }
 
-        /* Toast */
         .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            position: fixed; bottom: 24px; right: 24px;
+            z-index: 2000; display: flex; flex-direction: column; gap: 8px;
         }
         .toast {
-            padding: 14px 24px;
-            border-radius: 10px;
-            color: #fff;
-            font-weight: 500;
-            font-size: 14px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 280px;
-            max-width: 420px;
+            padding: 14px 24px; border-radius: var(--radius-sm);
+            color: #fff; font-weight: 500; font-size: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 10px;
+            min-width: 280px; max-width: 420px;
             animation: slideUp 0.3s ease;
         }
-        .toast.success {
-            background: #2E7D32;
-        }
-        .toast.error {
-            background: #C62828;
-        }
-        .toast.info {
-            background: #8B0E3D;
-        }
-        .toast.warning {
-            background: #E65100;
-        }
-        .toast .toast-close {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            font-size: 16px;
-            margin-left: auto;
-        }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .toast.success { background: #2E7D32; }
+        .toast.error { background: #C62828; }
+        .toast.info { background: var(--primary-dark); }
+        .toast.warning { background: #E65100; }
+        .toast .toast-close { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 16px; margin-left: auto; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            .modal .form-row {
-                grid-template-columns: 1fr;
-            }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .modal .form-row { grid-template-columns: 1fr; }
+            .navbar .admin-info .logout-btn span { display: none; }
+            table th:nth-child(4), table td:nth-child(4),
+            table th:nth-child(5), table td:nth-child(5) { display: none; }
+            .photo-upload-container { flex-direction: column; align-items: center; }
+            .modal { max-width: 100%; padding: 20px; }
         }
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .stat-card .number {
-                font-size: 18px;
-            }
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .toolbar .search-box {
-                max-width: 100%;
-            }
-            .modal .modal-footer {
-                flex-direction: column;
-            }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .stat-card { padding: 12px; }
+            .stat-card .number { font-size: 18px; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar .search-box { max-width: 100%; }
+            .modal .modal-footer { flex-direction: column; }
+            .photo-upload-container .photo-preview { width: 60px; height: 60px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
             <a href="#" class="logo">
@@ -565,15 +390,14 @@
                 <span class="brand"><span class="pro">Pro</span><span class="love">Love</span><span class="hub">Hub</span></span>
             </a>
             <div class="admin-info">
-                <span style="font-size:13px;color:#6B6570;">Admin Panel</span>
+                <span style="font-size:13px;color:var(--text-light);">Admin Panel</span>
                 <div class="avatar">AD</div>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></button>
             </div>
         </div>
     </nav>
 
     <div class="container">
-        <!-- Stats -->
         <div class="stats-grid" id="statsGrid">
             <div class="stat-card"><div class="icon primary"><i class="fas fa-users"></i></div><div class="number" id="totalMembers">0</div><div class="label">Total</div></div>
             <div class="stat-card"><div class="icon gold"><i class="fas fa-user-check"></i></div><div class="number" id="activeMembers">0</div><div class="label">Active</div></div>
@@ -583,10 +407,9 @@
             <div class="stat-card"><div class="icon purple"><i class="fas fa-mobile-alt"></i></div><div class="number" id="appSignupCount">0</div><div class="label">App Sign-ups</div></div>
         </div>
 
-        <!-- Toolbar -->
         <div class="toolbar">
             <div class="search-box">
-                <i class="fas fa-search" style="color:#9A94A3;"></i>
+                <i class="fas fa-search" style="color:var(--text-lighter);"></i>
                 <input type="text" id="searchInput" placeholder="Search members..." />
             </div>
             <div class="actions">
@@ -595,7 +418,6 @@
             </div>
         </div>
 
-        <!-- Table -->
         <div class="table-container">
             <div class="table-wrapper">
                 <table>
@@ -612,16 +434,14 @@
                         </tr>
                     </thead>
                     <tbody id="membersTableBody">
-                        <tr>
-                            <td colspan="8"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>Loading members...</h3></div></td>
-                        </tr>
+                        <tr><td colspan="8"><div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h3>Loading members...</h3></div></td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal for Add/Edit Member -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <div class="modal-header">
@@ -630,19 +450,81 @@
             </div>
             <form id="memberForm">
                 <input type="hidden" id="editId" />
-                <div class="form-group"><label>Full Name <span style="color:#C2185B;">*</span></label><input type="text" id="formName" placeholder="e.g. Jessica Smith" required /></div>
-                <div class="form-group"><label>Email <span style="color:#C2185B;">*</span></label><input type="email" id="formEmail" placeholder="you@example.com" required /></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Gender <span style="color:#C2185B;">*</span></label><select id="formGender" required><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div>
-                    <div class="form-group"><label>Looking For <span style="color:#C2185B;">*</span></label><select id="formLookingFor" required><option value="">Select</option><option value="Men">Men</option><option value="Women">Women</option><option value="Everyone">Everyone</option></select></div>
+                
+                <div class="form-group">
+                    <label>Full Name <span style="color:var(--primary);">*</span></label>
+                    <input type="text" id="formName" placeholder="e.g. Jessica Smith" required />
                 </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Date of Birth</label><input type="date" id="formDob" /></div>
-                    <div class="form-group"><label>Location</label><input type="text" id="formLocation" placeholder="Toronto, ON" /></div>
+                
+                <div class="form-group">
+                    <label>Email <span style="color:var(--primary);">*</span></label>
+                    <input type="email" id="formEmail" placeholder="you@example.com" required />
                 </div>
-                <div class="form-group"><label>Bio</label><textarea id="formBio" placeholder="About this member..." rows="3"></textarea></div>
-                <div class="form-group"><label>Interests (comma separated)</label><input type="text" id="formInterests" placeholder="Travel, Music, Hiking" /></div>
-                <div class="form-group"><label>Status</label><select id="formStatus"><option value="active">Active</option><option value="pending" selected>Pending</option><option value="rejected">Rejected</option></select></div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Gender <span style="color:var(--primary);">*</span></label>
+                        <select id="formGender" required>
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Looking For <span style="color:var(--primary);">*</span></label>
+                        <select id="formLookingFor" required>
+                            <option value="">Select</option>
+                            <option value="Men">Men</option>
+                            <option value="Women">Women</option>
+                            <option value="Everyone">Everyone</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="formDob" />
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="formLocation" placeholder="Toronto, ON" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea id="formBio" placeholder="About this member..." rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Interests (comma separated)</label>
+                    <input type="text" id="formInterests" placeholder="Travel, Music, Hiking" />
+                </div>
+
+                <!-- ===== PHOTO UPLOAD ===== -->
+                <div class="form-group">
+                    <label>Profile Photo</label>
+                    <div class="photo-upload-container">
+                        <img id="photoPreview" class="photo-preview" src="" alt="Photo preview" style="display:none;" />
+                        <div id="photoPlaceholder" class="photo-preview" style="display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--text-lighter);background:var(--off-white);border:2px dashed #ddd;">📷</div>
+                        <input type="file" id="photoInput" accept="image/*" />
+                        <button type="button" class="photo-upload-btn" id="choosePhotoBtn"><i class="fas fa-camera"></i> Choose Photo</button>
+                        <button type="button" class="photo-upload-btn" id="removePhotoBtn" style="display:none;border-color:#e74c3c;color:#e74c3c;"><i class="fas fa-times"></i> Remove</button>
+                    </div>
+                    <input type="hidden" id="formPhotoUrl" />
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="formStatus">
+                        <option value="active">Active</option>
+                        <option value="pending" selected>Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="cancelModalBtn">Cancel</button>
                     <button type="submit" class="btn btn-primary" id="formSubmitBtn"><i class="fas fa-save"></i> Save Member</button>
@@ -651,18 +533,20 @@
         </div>
     </div>
 
-    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const SUPABASE_URL = 'https://precvldulohwudpfmzsn.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByZWN2bGR1bG9od3VkcGZtenNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwMDMwNzUsImV4cCI6MjEwMjU3OTA3NX0.BYpgOVlLG1cw5pdYfjrhI_bP615ALKCr1tb9U5Ooc0c';
-            const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             let members = [];
             let currentFilter = 'all';
             let searchQuery = '';
+            let currentPhotoFile = null;
+            let currentPhotoUrl = '';
 
             // DOM refs
             const tbody = document.getElementById('membersTableBody');
@@ -676,28 +560,59 @@
             const editId = document.getElementById('editId');
             const modalTitle = document.getElementById('modalTitle');
             const formSubmitBtn = document.getElementById('formSubmitBtn');
+            const photoInput = document.getElementById('photoInput');
+            const photoPreview = document.getElementById('photoPreview');
+            const photoPlaceholder = document.getElementById('photoPlaceholder');
+            const removePhotoBtn = document.getElementById('removePhotoBtn');
+            const choosePhotoBtn = document.getElementById('choosePhotoBtn');
+            const formPhotoUrl = document.getElementById('formPhotoUrl');
 
             // Toast helper
-            function showToast(msg, type = 'info') {
-                const container = document.getElementById('toastContainer');
-                const div = document.createElement('div');
+            function showToast(msg, type) {
+                type = type || 'info';
+                var container = document.getElementById('toastContainer');
+                var div = document.createElement('div');
                 div.className = 'toast ' + type;
                 div.innerHTML = msg + '<button class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>';
                 container.appendChild(div);
-                setTimeout(() => div.remove(), 4000);
+                setTimeout(function() { if (div.parentElement) div.remove(); }, 4000);
+            }
+
+            // Upload photo to Supabase Storage
+            async function uploadPhoto(file, memberId) {
+                try {
+                    var fileExt = file.name.split('.').pop();
+                    var fileName = memberId + '.' + fileExt;
+                    var filePath = 'public/' + fileName;
+
+                    var { error: uploadError } = await supabase.storage
+                        .from('member-photos')
+                        .upload(filePath, file, { upsert: true });
+
+                    if (uploadError) throw uploadError;
+
+                    var { data: urlData } = supabase.storage
+                        .from('member-photos')
+                        .getPublicUrl(filePath);
+
+                    return urlData.publicUrl;
+                } catch (err) {
+                    console.error('Upload error:', err);
+                    throw err;
+                }
             }
 
             // Check admin session
             async function checkAdmin() {
-                const { data: { user } } = await supabaseClient.auth.getUser();
+                var { data: { user } } = await supabase.auth.getUser();
                 if (!user) {
-                    window.location.href = 'admin-login.html';
+                    window.location.href = 'adminlogin.html';
                     return false;
                 }
-                const { data: member } = await supabaseClient.from('members').select('source').eq('id', user.id).single();
+                var { data: member } = await supabase.from('members').select('source').eq('id', user.id).single();
                 if (!member || member.source !== 'admin') {
                     alert('Access denied. Admin privileges required.');
-                    window.location.href = 'index.html';
+                    window.location.href = 'loginpage.html';
                     return false;
                 }
                 return true;
@@ -705,7 +620,7 @@
 
             // Load members
             async function loadMembers() {
-                const { data, error } = await supabaseClient.from('members').select('*').order('created_at', { ascending: false });
+                var { data, error } = await supabase.from('members').select('*').order('created_at', { ascending: false });
                 if (error) {
                     showToast('Error loading members: ' + error.message, 'error');
                     return;
@@ -716,76 +631,83 @@
 
             // Render
             function render() {
-                // Stats
-                document.getElementById('totalMembers').textContent = members.length;
-                document.getElementById('activeMembers').textContent = members.filter(m => m.status === 'active').length;
-                document.getElementById('pendingMembers').textContent = members.filter(m => m.status === 'pending').length;
-                document.getElementById('rejectedMembers').textContent = members.filter(m => m.status === 'rejected').length;
-                document.getElementById('adminAddedCount').textContent = members.filter(m => m.source === 'admin').length;
-                document.getElementById('appSignupCount').textContent = members.filter(m => m.source === 'app').length;
-
-                // Filter
-                let filtered = [...members];
-                if (currentFilter === 'pending') filtered = filtered.filter(m => m.status === 'pending');
-                else if (currentFilter === 'rejected') filtered = filtered.filter(m => m.status === 'rejected');
-                else if (currentFilter === 'active') filtered = filtered.filter(m => m.status === 'active');
+                var filtered = [...members];
+                if (currentFilter === 'pending') filtered = filtered.filter(function(m) { return m.status === 'pending'; });
+                else if (currentFilter === 'rejected') filtered = filtered.filter(function(m) { return m.status === 'rejected'; });
+                else if (currentFilter === 'active') filtered = filtered.filter(function(m) { return m.status === 'active'; });
                 if (searchQuery.trim()) {
-                    const q = searchQuery.trim().toLowerCase();
-                    filtered = filtered.filter(m => m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q));
+                    var q = searchQuery.trim().toLowerCase();
+                    filtered = filtered.filter(function(m) {
+                        return m.name.toLowerCase().includes(q) || m.email.toLowerCase().includes(q);
+                    });
                 }
 
+                document.getElementById('totalMembers').textContent = members.length;
+                document.getElementById('activeMembers').textContent = members.filter(function(m) { return m.status === 'active'; }).length;
+                document.getElementById('pendingMembers').textContent = members.filter(function(m) { return m.status === 'pending'; }).length;
+                document.getElementById('rejectedMembers').textContent = members.filter(function(m) { return m.status === 'rejected'; }).length;
+                document.getElementById('adminAddedCount').textContent = members.filter(function(m) { return m.source === 'admin'; }).length;
+                document.getElementById('appSignupCount').textContent = members.filter(function(m) { return m.source === 'app'; }).length;
+
                 if (filtered.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fas fa-users-slash"></i><h3>No members found</h3></div></td></tr>`;
+                    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><i class="fas fa-users-slash"></i><h3>No members found</h3></div></td></tr>';
                     return;
                 }
 
-                const colors = ['#C2185B', '#D4A54A', '#4CAF50', '#7B1FA2', '#00695C', '#E65100'];
-                let html = '';
-                filtered.forEach((m, i) => {
-                    const initials = m.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-                    const color = colors[i % colors.length];
-                    const statusClass = m.status || 'pending';
-                    const sourceClass = (m.source === 'admin') ? 'source-badge admin' : 'source-badge app';
-                    html += `<tr>
-                        <td>${i + 1}</td>
-                        <td><div class="member-info"><div class="member-avatar" style="background:${color};">${initials}</div><div class="name">${escapeHtml(m.name)}</div></div></td>
-                        <td>${escapeHtml(m.email)}</td>
-                        <td>${escapeHtml(m.gender || '—')}</td>
-                        <td>${escapeHtml(m.lookingFor || '—')}</td>
-                        <td><span class="status-badge ${statusClass}">${statusClass}</span></td>
-                        <td><span class="${sourceClass}">${m.source || 'app'}</span></td>
-                        <td><div class="action-btns">
-                            ${m.status === 'pending' || m.status === 'rejected' ? `<button class="btn-approve" data-id="${m.id}" data-action="approve"><i class="fas fa-check"></i> Approve</button>` : ''}
-                            <button class="btn-edit" data-id="${m.id}" data-action="edit"><i class="fas fa-pen"></i> Edit</button>
-                            ${m.status !== 'rejected' ? `<button class="btn-reject" data-id="${m.id}" data-action="reject"><i class="fas fa-times"></i> Reject</button>` : ''}
-                            <button class="btn-remove" data-id="${m.id}" data-action="remove"><i class="fas fa-trash"></i> Remove</button>
-                        </div></td>
-                    </tr>`;
+                var colors = ['#C2185B', '#D4A54A', '#4CAF50', '#7B1FA2', '#00695C', '#E65100'];
+                var html = '';
+                filtered.forEach(function(m, i) {
+                    var initials = m.name.split(' ').map(function(n) { return n[0]; }).join('').toUpperCase().slice(0, 2);
+                    var color = colors[i % colors.length];
+                    var statusMap = {
+                        active: '<span class="status-badge active"><i class="fas fa-circle" style="font-size:8px;"></i> Active</span>',
+                        pending: '<span class="status-badge pending"><i class="fas fa-clock" style="font-size:8px;"></i> Pending</span>',
+                        rejected: '<span class="status-badge rejected"><i class="fas fa-times-circle" style="font-size:8px;"></i> Rejected</span>'
+                    };
+                    var sourceMap = {
+                        admin: '<span class="source-badge admin"><i class="fas fa-user-cog"></i> Admin</span>',
+                        app: '<span class="source-badge app"><i class="fas fa-mobile-alt"></i> App</span>'
+                    };
+
+                    var avatarHtml = '';
+                    if (m.photo_url) {
+                        avatarHtml = '<img src="' + m.photo_url + '" alt="' + m.name + '" />';
+                    } else {
+                        avatarHtml = initials;
+                    }
+
+                    html += '<tr>';
+                    html += '<td>' + (i + 1) + '</td>';
+                    html += '<td><div class="member-info"><div class="member-avatar" style="background:' + color + ';">' + avatarHtml + '</div><div><div class="name">' + escapeHtml(m.name) + '</div></div></div></td>';
+                    html += '<td style="font-size:13px;color:var(--text-light);">' + escapeHtml(m.email) + '</td>';
+                    html += '<td>' + escapeHtml(m.gender || '—') + '</td>';
+                    html += '<td>' + escapeHtml(m.looking_for || '—') + '</td>';
+                    html += '<td>' + (statusMap[m.status] || statusMap.pending) + '</td>';
+                    html += '<td>' + (sourceMap[m.source] || sourceMap.admin) + '</td>';
+                    html += '<td><div class="action-btns">';
+                    if (m.status === 'pending' || m.status === 'rejected') {
+                        html += '<button class="btn-approve" data-id="' + m.id + '" data-action="approve"><i class="fas fa-check"></i> Approve</button>';
+                    }
+                    html += '<button class="btn-edit" data-id="' + m.id + '" data-action="edit"><i class="fas fa-pen"></i> Edit</button>';
+                    if (m.status !== 'rejected') {
+                        html += '<button class="btn-reject" data-id="' + m.id + '" data-action="reject"><i class="fas fa-times"></i> Reject</button>';
+                    }
+                    html += '<button class="btn-remove" data-id="' + m.id + '" data-action="remove"><i class="fas fa-trash"></i> Remove</button>';
+                    html += '</div></td></tr>';
                 });
                 tbody.innerHTML = html;
 
                 // Attach action listeners
-                document.querySelectorAll('[data-action]').forEach(btn => {
-                    btn.addEventListener('click', async function(e) {
-                        const id = this.dataset.id;
-                        const action = this.dataset.action;
+                document.querySelectorAll('[data-action]').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var id = this.dataset.id;
+                        var action = this.dataset.action;
                         if (action === 'approve') {
-                            const { error } = await supabaseClient.from('members').update({ status: 'active' }).eq('id', id);
-                            if (error) showToast('Error: ' + error.message, 'error');
-                            else { showToast('Member approved!', 'success');
-                                loadMembers(); }
+                            approveMember(id);
                         } else if (action === 'reject') {
-                            if (!confirm('Reject this member?')) return;
-                            const { error } = await supabaseClient.from('members').update({ status: 'rejected' }).eq('id', id);
-                            if (error) showToast('Error: ' + error.message, 'error');
-                            else { showToast('Member rejected.', 'warning');
-                                loadMembers(); }
+                            rejectMember(id);
                         } else if (action === 'remove') {
-                            if (!confirm('Remove this member permanently?')) return;
-                            const { error } = await supabaseClient.from('members').delete().eq('id', id);
-                            if (error) showToast('Error: ' + error.message, 'error');
-                            else { showToast('Member removed.', 'error');
-                                loadMembers(); }
+                            removeMember(id);
                         } else if (action === 'edit') {
                             openEditModal(id);
                         }
@@ -795,32 +717,81 @@
 
             function escapeHtml(text) {
                 if (!text) return '—';
-                const div = document.createElement('div');
+                var div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
             }
 
+            // CRUD functions
+            window.approveMember = async function(id) {
+                if (!confirm('Approve this member?')) return;
+                var { error } = await supabase.from('members').update({ status: 'active' }).eq('id', id);
+                if (error) showToast('Error: ' + error.message, 'error');
+                else { showToast('Member approved!', 'success');
+                    loadMembers(); }
+            };
+
+            window.rejectMember = async function(id) {
+                if (!confirm('Reject this member?')) return;
+                var { error } = await supabase.from('members').update({ status: 'rejected' }).eq('id', id);
+                if (error) showToast('Error: ' + error.message, 'error');
+                else { showToast('Member rejected.', 'warning');
+                    loadMembers(); }
+            };
+
+            window.removeMember = async function(id) {
+                if (!confirm('Remove this member permanently?')) return;
+                var { error } = await supabase.from('members').delete().eq('id', id);
+                if (error) showToast('Error: ' + error.message, 'error');
+                else { showToast('Member removed.', 'error');
+                    loadMembers(); }
+            };
+
             // Open edit modal
-            function openEditModal(id) {
-                const member = members.find(m => m.id === id);
+            window.openEditModal = function(id) {
+                var member = members.find(function(m) { return m.id === id; });
                 if (!member) return;
                 editId.value = id;
                 document.getElementById('formName').value = member.name;
                 document.getElementById('formEmail').value = member.email;
                 document.getElementById('formGender').value = member.gender || '';
-                document.getElementById('formLookingFor').value = member.lookingFor || '';
+                document.getElementById('formLookingFor').value = member.looking_for || '';
                 document.getElementById('formDob').value = member.dob || '';
                 document.getElementById('formLocation').value = member.location || '';
                 document.getElementById('formBio').value = member.bio || '';
                 document.getElementById('formInterests').value = (member.interests || []).join(', ');
                 document.getElementById('formStatus').value = member.status || 'pending';
+
+                // Handle photo
+                if (member.photo_url) {
+                    currentPhotoUrl = member.photo_url;
+                    photoPreview.src = member.photo_url;
+                    photoPreview.style.display = 'block';
+                    photoPlaceholder.style.display = 'none';
+                    removePhotoBtn.style.display = 'inline-block';
+                    formPhotoUrl.value = member.photo_url;
+                } else {
+                    resetPhotoUI();
+                }
+                currentPhotoFile = null;
+
                 modalTitle.textContent = 'Edit Member';
                 formSubmitBtn.textContent = 'Update Member';
                 modal.classList.add('open');
+            };
+
+            function resetPhotoUI() {
+                currentPhotoUrl = '';
+                currentPhotoFile = null;
+                photoPreview.style.display = 'none';
+                photoPlaceholder.style.display = 'flex';
+                removePhotoBtn.style.display = 'none';
+                formPhotoUrl.value = '';
+                photoInput.value = '';
             }
 
             // Open add modal
-            function openAddModal() {
+            window.openAddModal = function() {
                 editId.value = '';
                 document.getElementById('formName').value = '';
                 document.getElementById('formEmail').value = '';
@@ -831,47 +802,109 @@
                 document.getElementById('formBio').value = '';
                 document.getElementById('formInterests').value = '';
                 document.getElementById('formStatus').value = 'pending';
+                resetPhotoUI();
                 modalTitle.textContent = 'Add Member';
                 formSubmitBtn.textContent = 'Add Member';
                 modal.classList.add('open');
-            }
+            };
 
             // Close modal
             function closeModal() {
                 modal.classList.remove('open');
+                resetPhotoUI();
             }
+
+            // Photo input preview
+            choosePhotoBtn.addEventListener('click', function() {
+                photoInput.click();
+            });
+
+            photoInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    currentPhotoFile = this.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        photoPreview.src = e.target.result;
+                        photoPreview.style.display = 'block';
+                        photoPlaceholder.style.display = 'none';
+                        removePhotoBtn.style.display = 'inline-block';
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            removePhotoBtn.addEventListener('click', function() {
+                if (confirm('Remove this photo?')) {
+                    resetPhotoUI();
+                }
+            });
 
             // Form submit
             memberForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                const id = editId.value;
-                const data = {
+                var id = editId.value;
+                var data = {
                     name: document.getElementById('formName').value.trim(),
                     email: document.getElementById('formEmail').value.trim(),
                     gender: document.getElementById('formGender').value,
-                    lookingFor: document.getElementById('formLookingFor').value,
-                    dob: document.getElementById('formDob').value,
-                    location: document.getElementById('formLocation').value.trim(),
-                    bio: document.getElementById('formBio').value.trim(),
-                    interests: document.getElementById('formInterests').value.trim().split(',').map(s => s.trim())
-                        .filter(Boolean),
+                    looking_for: document.getElementById('formLookingFor').value,
+                    dob: document.getElementById('formDob').value || null,
+                    location: document.getElementById('formLocation').value.trim() || null,
+                    bio: document.getElementById('formBio').value.trim() || null,
+                    interests: document.getElementById('formInterests').value.trim() ? document.getElementById('formInterests')
+                        .value.trim().split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s; }) : [],
                     status: document.getElementById('formStatus').value
                 };
-                if (!data.name || !data.email || !data.gender || !data.lookingFor) {
+
+                if (!data.name || !data.email || !data.gender || !data.looking_for) {
                     showToast('Please fill in all required fields.', 'error');
                     return;
                 }
-                let result;
+
+                var result;
                 if (id) {
-                    result = await supabaseClient.from('members').update(data).eq('id', id);
+                    // Update existing member
+                    result = await supabase.from('members').update(data).eq('id', id);
+
+                    // Handle photo upload for edit
+                    if (currentPhotoFile) {
+                        try {
+                            var photoUrl = await uploadPhoto(currentPhotoFile, id);
+                            await supabase.from('members').update({ photo_url: photoUrl }).eq('id', id);
+                        } catch (err) {
+                            showToast('Photo upload failed: ' + err.message, 'warning');
+                        }
+                    } else if (currentPhotoUrl === '' && formPhotoUrl.value) {
+                        // Photo was removed
+                        await supabase.from('members').update({ photo_url: null }).eq('id', id);
+                    }
+
+                    if (result.error) showToast('Error: ' + result.error.message, 'error');
+                    else { showToast('Member updated!', 'success');
+                        closeModal();
+                        loadMembers(); }
+
                 } else {
-                    result = await supabaseClient.from('members').insert([{ ...data,
-                        source: 'admin' }]);
-                }
-                if (result.error) {
-                    showToast('Error: ' + result.error.message, 'error');
-                } else {
-                    showToast(id ? 'Member updated!' : 'Member added!', 'success');
+                    // Add new member
+                    result = await supabase.from('members').insert([{ ...data, source: 'admin' }]);
+
+                    if (result.error) {
+                        showToast('Error: ' + result.error.message, 'error');
+                        return;
+                    }
+
+                    // Handle photo upload for new member
+                    if (currentPhotoFile && result.data && result.data[0]) {
+                        var newId = result.data[0].id;
+                        try {
+                            var photoUrl = await uploadPhoto(currentPhotoFile, newId);
+                            await supabase.from('members').update({ photo_url: photoUrl }).eq('id', newId);
+                        } catch (err) {
+                            showToast('Photo uploaded but member created. You can add photo later.', 'warning');
+                        }
+                    }
+
+                    showToast('Member added!', 'success');
                     closeModal();
                     loadMembers();
                 }
@@ -898,7 +931,7 @@
             // Logout
             document.getElementById('logoutBtn').addEventListener('click', async function() {
                 if (confirm('Logout?')) {
-                    await supabaseClient.auth.signOut();
+                    await supabase.auth.signOut();
                     localStorage.removeItem('isAdminLoggedIn');
                     window.location.href = 'index.html';
                 }
@@ -906,7 +939,7 @@
 
             // Init
             (async function init() {
-                const ok = await checkAdmin();
+                var ok = await checkAdmin();
                 if (ok) {
                     await loadMembers();
                     console.log('🔐 ProLoveHub Admin Panel loaded.');
